@@ -6,7 +6,7 @@ from my_utils.login import APIClient
 import time
 import socket
 
-BASE_URL = "http://web:5000"
+BASE_URL = "http://localhost:5000"
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "123456"
 TEST_USERNAME = "1903358284"

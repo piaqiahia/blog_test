@@ -70,22 +70,35 @@ jobs:
           sleep 2
         done
 
+    - name: Import Database Schema and Data
+      run: |
+        echo "Creating database if not exists..."
+        # 先确保数据库存在
+        mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 -e "CREATE DATABASE IF NOT EXISTS h3blog;"
+        
+        echo "Importing 01-create-db.sql..."
+        # 导入建表语句（请把路径改成你实际的路径！）
+        # 如果文件在根目录：
+        # mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 h3blog < 01-create-db.sql
+        
+        echo "Importing 02-data-dump.sql..."
+        # 导入数据
+        # 如果文件在根目录：
+        # mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 h3blog < 02-data-dump.sql
+        
+        # 如果文件在 sql/ 目录下，请改成：
+        mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 h3blog < sql/01-create-db.sql
+        mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 h3blog < sql/02-data-dump.sql
+
+        echo "Database imported successfully!"
+
     - name: Start Flask App in Background
       run: |
-        # 1. 先创建 logs 目录（-p 表示如果已存在也不报错）
         mkdir -p logs
-          
-        # 2. 设置环境变量（根据你的实际情况调整）
-        export FLASK_APP=app  # 或者你的主文件名
-          
-        # 3. 启动服务（后台运行）
+        export FLASK_APP=app
         flask run --host=0.0.0.0 --port=5000 &
-          
-        # 4. 等待服务启动（建议稍微加长一点，比如 10 秒，给日志初始化留时间）
         echo "Waiting for Flask to start..."
         sleep 15
-          
-        # 5. 验证端口（这次应该能通了）
         curl http://127.0.0.1:5000 || echo "Flask might not be up yet, but we proceed anyway"    
 
     # 6. 运行测试

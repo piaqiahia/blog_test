@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 import requests
 
-BASE_URL = "http://web:5000"
+BASE_URL = "http://localhost:5000"
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "123456"
 NORMAL_USERNAME = "1903358284"
