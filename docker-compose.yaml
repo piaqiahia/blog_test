@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: h3blog_web
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_CONFIG=development
+      - DATABASE_URL=mysql+pymysql://root:1511054331@db/h3blog?charset=utf8mb4
+      - FLASK_APP=app:create_app()
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    # 使用 > 符号可以让多行脚本更清晰，减少缩进错误
+    command: >
+      sh -c "
+        echo '等待数据库完全就绪...';
+        # 循环尝试连接，最多重试 90 次
+        for i in {1..90}; do
+          # 尝试用 Python 建立真实的数据库连接
+          if python -c 'import pymysql; pymysql.connect(host=\"db\", user=\"root\", password=\"1511054331\", database=\"h3blog\", connect_timeout=2)'; then
+            echo '数据库连接成功，启动 Flask 应用';
+            flask run --host=0.0.0.0;
+            exit 0;
+          fi;
+          echo \"数据库未就绪，等待 10 秒... (\$i/90)\";
+          sleep 10;
+        done;
+        echo '数据库启动超时，请检查日志';
+        exit 1;
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: h3blog_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1511054331
+      MYSQL_DATABASE: h3blog
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1511054331"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:5.2-apache
+    container_name: h3blog_phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: 1511054331
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: h3blog_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # 测试服务（使用 h3blog_test 目录名）
+  test:
+    build: .
+    # 使用你原本的 run_test.py 脚本
+    command: sh -c "python h3blog_test/run_test.py"
+    volumes:
+      - .:/app
+      # 把报告目录挂载出来，方便在宿主机查看
+      - ./h3blog_test/reports:/app/h3blog_test/reports
+      - ./h3blog_test/allure-results:/app/h3blog_test/allure-results
+      - ./h3blog_test/allure-report:/app/h3blog_test/allure-report
+    environment:
+      - FLASK_ENV=testing
+      # 注意：这里连接的是主数据库 h3blog，而不是 h3blog_test
+      # 因为你的初始化脚本都在 h3blog 里
+      - DATABASE_URL=mysql+pymysql://root:1511054331@db:3306/h3blog?charset=utf8mb4
+      - REDIS_URL=redis://redis:6379/1
+      - PYTHONPATH=/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      # 关键：要等 web 服务启动完成
+      web:
+        condition: service_started
+    networks:
+      - app-network
+    # 加上 tty 和 stdin_open 防止容器立即退出（虽然脚本会自己退出）
+    tty: true
+    stdin_open: true
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+

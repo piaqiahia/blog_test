@@ -1,0 +1,75 @@
+{% extends 'admin/common/base.html' %}
+{% block css %}
+{{super()}}
+<link href="{{url_for('admin.static',filename='ajax/libs/jasny/jasny-bootstrap.min.css')}}?v=3.1.3" rel="stylesheet"/>
+{% endblock %}
+{% block body %}
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form">
+            <input id="treeId" name="parent_id" type="hidden" value="{{d.id}}" />
+            <div class="form-group">
+				<label class="col-sm-3 control-label">上级：</label>
+				<div class="col-sm-8">
+				    <div class="input-group">
+					    <input class="form-control" type="text" onclick="selectMenuTree()" id="treeName" readonly="true" value="{{d.name}}">
+				        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+				    </div>
+				</div>
+			</div>
+            <div class="form-group">
+				<label class="col-sm-3 control-label is-required">名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="name" id="name" value="" required>
+				</div>
+			</div>
+
+            <div class="form-group">
+				<label class="col-sm-3 control-label is-required">排序：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="order_num" id="order_num" value="" required>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+{% endblock %}
+{% block js %}
+{{ super() }}
+<script src="{{url_for('admin.static',filename='ajax/libs/jasny/jasny-bootstrap.min.js')}}?v=3.1.3"></script>
+<script type="text/javascript">
+
+
+    
+    $("#form").validate({
+
+    });
+    
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save("{{url_for('admin.sys.org.add')}}", $('#form').serialize());
+        }
+    }
+
+    /*新增-选择上级*/
+    function selectMenuTree() {
+        var treeId = $("#treeId").val();
+        var menuId = treeId > 0 ? treeId : 1;
+        var url = "{{url_for('admin.sys.org.select_tree')}}?id=" + menuId;
+		var options = {
+			title: '选择',
+			width: "380",
+			url: url,
+			callBack: doSubmit
+		};
+		$.modal.openOptions(options);
+	}
+		
+	function doSubmit(index, layero){
+		var body = $.modal.getChildFrame(index);
+   		$("#treeId").val(body.find('#treeId').val());
+   		$("#treeName").val(body.find('#treeName').val());
+   		$.modal.close(index);
+	}
+</script>
+{% endblock %}

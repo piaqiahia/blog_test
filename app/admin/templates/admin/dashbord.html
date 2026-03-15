@@ -1,0 +1,304 @@
+{% extends 'admin/common/base.html' %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">控制面板</h1>
+        </div>
+    </div>
+
+    <!-- 统计面板 -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-file-text fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ stats.article_count }}</div>
+                            <div>文章总数</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">查看详情</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-folder-open fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ stats.category_count }}</div>
+                            <div>栏目数量</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">查看详情</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-tags fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ stats.tag_count }}</div>
+                            <div>标签数量</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">查看详情</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-user-plus fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ stats.vip_count }}</div>
+                            <div>VIP会员</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left">查看详情</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最近文章和分类统计 -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw"></i> 最近发布的文章
+                </div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        {% for article in recent_articles %}
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-file-text fa-fw"></i> {{ article.title }}
+                            <span class="pull-right text-muted small">
+                                <em>{{ article.ctime.strftime('%Y-%m-%d %H:%M') }}</em>
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 文章分类统计
+                </div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        {% for category in category_stats %}
+                        <a href="#" class="list-group-item">
+                            <i class="fa fa-folder fa-fw"></i> {{ category.name }}
+                            <span class="pull-right text-muted small">
+                                <em>{{ category.count }}篇</em>
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 标签云和系统信息 -->
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-tags fa-fw"></i> 标签云
+                </div>
+                <div class="panel-body">
+                    <div class="tag-cloud">
+                        {% for tag in tag_stats %}
+                        <a href="#" class="label label-info tag-item" data-count="{{ tag.count }}">
+                            {{ tag.name }} ({{ tag.count }})
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-link fa-fw"></i> 友情链接
+                </div>
+                <div class="panel-body">
+                    <p class="text-muted">共有 {{ stats.link_count }} 个友情链接</p>
+                    <a href="" class="btn btn-default btn-block">
+                        <i class="fa fa-plus fa-fw"></i> 管理友情链接
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-info-circle fa-fw"></i> 系统信息
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <td width="30%"><strong>操作系统</strong></td>
+                                            <td>{{ system_info.os_name }} {{ system_info.os_version }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>服务器名</strong></td>
+                                            <td>{{ system_info.hostname }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Python版本</strong></td>
+                                            <td>{{ system_info.python_version }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>当前用户</strong></td>
+                                            <td>{{ current_user.username }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>登录时间</strong></td>
+                                            <td>{{ current_user.last_seen.strftime('%Y-%m-%d %H:%M:%S') if
+                                                current_user.last_seen else '首次登录' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 自定义样式 -->
+<style>
+    .huge {
+        font-size: 40px;
+    }
+
+    .panel-green {
+        border-color: #5cb85c;
+    }
+
+    .panel-green>.panel-heading {
+        border-color: #5cb85c;
+        color: white;
+        background-color: #5cb85c;
+    }
+
+    .panel-green>a {
+        color: #5cb85c;
+    }
+
+    .panel-green>a:hover {
+        color: #3d8b3d;
+    }
+
+    .panel-red {
+        border-color: #d9534f;
+    }
+
+    .panel-red>.panel-heading {
+        border-color: #d9534f;
+        color: white;
+        background-color: #d9534f;
+    }
+
+    .panel-red>a {
+        color: #d9534f;
+    }
+
+    .panel-red>a:hover {
+        color: #b52b27;
+    }
+
+    .panel-yellow {
+        border-color: #f0ad4e;
+    }
+
+    .panel-yellow>.panel-heading {
+        border-color: #f0ad4e;
+        color: white;
+        background-color: #f0ad4e;
+    }
+
+    .panel-yellow>a {
+        color: #f0ad4e;
+    }
+
+    .panel-yellow>a:hover {
+        color: #df8a13;
+    }
+
+    .tag-cloud {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .tag-cloud .label {
+        display: inline-block;
+        margin: 5px;
+        padding: 5px 10px;
+    }
+
+    .tag-cloud .tag-item {
+        font-size: 12px;
+    }
+</style>
+
+<script src="{{url_for('admin.static',filename='js/jquery.min.js')}}"></script>
+<script>
+    $(document).ready(function () {
+        // 动态设置标签大小
+        $('.tag-item').each(function () {
+            var count = $(this).data('count');
+            $(this).css('font-size', (12 + count * 2) + 'px');
+        });
+    });
+</script>
+
+{% endblock %}

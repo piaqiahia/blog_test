@@ -1,0 +1,140 @@
+{% extends 'admin/common/base.html' %}
+{% block css %}
+{{super()}}
+<link href="{{url_for('admin.static',filename='ajax/libs/jasny/jasny-bootstrap.min.css')}}?v=3.1.3" rel="stylesheet"/>
+% if m.has_html_type('datetime'):
+<link href="{{url_for('admin.static',filename='ajax/libs/datapicker/bootstrap-datetimepicker.min.css')}}" rel="stylesheet"/>
+% endif
+{% endblock %}
+{% block body %}
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form">
+            <input type="hidden" name="id" value="{{d.id}}">
+            % if m.tpl_category == 'tree':
+            <input id="treeId" name="parent_id" type="hidden" value="{{d.parent_id}}" />
+            <div class="form-group">
+				<label class="col-sm-3 control-label">上级：</label>
+				<div class="col-sm-8">
+				    <div class="input-group">
+					    <input class="form-control" type="text" onclick="selectTree()" id="treeName" readonly="true" value="{{'无' if d.parent == None else d.parent.${m.tree_name}}}">
+				        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+				    </div>
+				</div>
+			</div>
+            % endif
+            % for c in m.columns:
+            % if c.col_name == 'parent_id' and m.tpl_category == 'tree':
+
+            % elif c.is_edit == 1:
+            <div class="form-group">
+				<label class="col-sm-3 control-label ${'is-required' if c.is_required == 1 else ''}">${c.col_comment}：</label>
+				<div class="col-sm-8">
+                    % if c.html_type == 'upload_img':
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-new thumbnail" style="max-width: 300px;min-width: 140px;">
+                            <img src="{{d.${c.col_name}}}">
+                        </div>
+                        <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+                        <div>
+                            <span class="btn btn-white btn-file"><span class="fileinput-new">选择图片</span><span class="fileinput-exists">更改</span><input type="file" name="${c.col_name}"></span>
+                            <a href="#" class="btn btn-white fileinput-exists" data-dismiss="fileinput">清除</a>
+                        </div>
+                    </div>
+                    % elif c.html_type == 'upload':
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput"><i class="glyphicon glyphicon-file fileinput-exists"></i> <span class="fileinput-filename">{{d.${c.col_name}}}</span></div>
+                        <span class="input-group-addon btn btn-white btn-file"><span class="fileinput-new">选择文件</span><span class="fileinput-exists">更改</span><input type="file" name="${c.col_name}"></span>
+                        <a href="#" class="input-group-addon btn btn-white fileinput-exists" data-dismiss="fileinput">清除</a>
+                    </div>
+                    % elif c.html_type == 'textarea':
+                    <textarea id="${c.col_name}" name="${c.col_name}" class="form-control">{{d.${c.col_name}}}</textarea>
+                    % elif c.html_type == 'datetime':
+                    <div class="input-group date">
+                        <input name="${c.col_name}" class="form-control dtp" placeholder="yyyy-MM-dd" type="text" value="{{d.${c.col_name}}}" ${'required' if c.is_required == 1 else ''}>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                    % elif c.html_type == 'summernote':
+                    <textarea id="${c.col_name}" name="${c.col_name}" class="tinymce-editor">{{d.${c.col_name}}}</textarea>
+                    % elif c.html_type == 'select':
+                    <select id="${c.col_name}" name="${c.col_name}" class="form-control m-b">
+						{% for dd in get_dict_data('${c.dict_type}')%}
+						<option value="{{dd.value}}" {{'selected' if d.${c.col_name} == dd.value else '' }}>{{dd.label}}</option>
+						{% endfor %}
+					</select>
+                    % elif c.html_type == 'radio':
+                    {% for dd in get_dict_data('${c.dict_type}')%}
+                    <div class="radio-box">
+                        <input type="radio" id="menuName_{{dd.id}}" name="${c.col_name}" value="{{dd.value}}" {{'checked' if d.${c.col_name} == dd.value else ''}} required>
+                        <label for="menuName_{{dd.id}}">{{dd.label}}</label>
+                    </div>
+                    {% endfor %}
+                    % else:
+					<input class="form-control" type="text" name="${c.col_name}" id="${c.col_name}" value="{{d.${c.col_name}}}" ${'required' if c.is_required == 1 else ''}>
+                    % endif 
+				</div>
+			</div>
+            % endif
+            % endfor
+		</form>
+	</div>
+</body>
+{% endblock %}
+{% block js %}
+{{ super() }}
+<script src="{{url_for('admin.static',filename='ajax/libs/jasny/jasny-bootstrap.min.js')}}?v=3.1.3"></script>
+% if m.has_html_type('summernote'):
+<script src="{{url_for('admin.static',filename='ajax/libs/tinymce/js/tinymce/tinymce.min.js')}}"></script>
+<script src="{{url_for('admin.static',filename='js/my_tinymce.js')}}"></script>
+% endif
+% if m.has_html_type('datetime'):
+<script src="{{url_for('admin.static',filename='ajax/libs/datapicker/bootstrap-datetimepicker.min.js')}}"></script>
+% endif
+<script type="text/javascript">
+
+    % if m.has_html_type('datetime'):
+    $(".dtp").datetimepicker({
+        format: 'yyyy-mm-dd',
+        minView: "month",
+        todayBtn:  true,
+        autoclose: true,
+    })
+    % endif
+    
+    $("#form").validate({
+
+    });
+    
+    function submitHandler() {
+        if ($.validate.form()) {
+            % if m.has_html_type('summernote'):
+            tinyMCE.triggerSave();
+            % endif
+            $.operate.save("{{url_for('admin.${m.tpl_path}.edit')}}", ${"new FormData(document.getElementById('form'))" if m.has_html_type('upload') else "$('#form').serialize()"});
+        }
+    }
+
+    % if m.tpl_category == 'tree':
+    /*新增-选择上级*/
+    function selectTree() {
+        var treeId = $("#treeId").val();
+        var menuId = treeId > 0 ? treeId : 1;
+        var url = "{{url_for('admin.${m.tpl_path}.select_tree')}}?id=" + menuId;
+		var options = {
+			title: '选择',
+			width: "380",
+			url: url,
+			callBack: doSubmit
+		};
+		$.modal.openOptions(options);
+	}
+		
+	function doSubmit(index, layero){
+		var body = $.modal.getChildFrame(index);
+   		$("#treeId").val(body.find('#treeId').val());
+   		$("#treeName").val(body.find('#treeName').val());
+   		$.modal.close(index);
+	}
+    % endif
+</script>
+{% endblock %}

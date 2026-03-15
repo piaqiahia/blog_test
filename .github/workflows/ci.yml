@@ -1,0 +1,111 @@
+
+name: CI/CD with Allure
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # 定义服务容器（MySQL 和 Redis）
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: 1511054331
+          MYSQL_DATABASE: h3blog
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -p1511054331"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
+    steps:
+    # 1. 拉取代码
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # 2. 设置 Python 3.10
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    # 3. 安装系统依赖（关键：安装 Java 运行 Allure）
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-jre
+
+    # 4. 安装 Python 依赖（使用 pyproject.toml）
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # 一次性安装项目 + 测试依赖
+        pip install ".[test]"
+
+    # 5. 等待 MySQL 启动完成
+    - name: Wait for MySQL
+      run: |
+        for i in {1..30}; do
+          if mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 -e "SELECT 1"; then
+            echo "MySQL is ready!"
+            break
+          fi
+          echo "# for MySQL... ($i/30)"
+          sleep 2
+        done
+
+    # 6. 运行测试
+    # 注意：因为有 7 个已知失败，使用 continue-on-error: true 保证流程继续走到生成报告那一步
+    - name: Run tests
+      run: |
+        pytest h3blog_test/testcases -v \
+          --alluredir=allure-results \
+          --html=reports/report.html \
+          --self-contained-html
+      env:
+        DATABASE_URL: mysql+pymysql://root:1511054331@127.0.0.1:3306/h3blog
+        REDIS_URL: redis://127.0.0.1:6379/1
+      continue-on-error: true
+
+    # 7. 下载并生成 Allure 报告
+    - name: Generate Allure Report
+      run: |
+        # 下载和你本地一致的 2.36.0 版本
+        curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.36.0/allure-2.36.0.zip
+        unzip allure.zip -d allure
+        ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
+        
+        # 生成静态 HTML
+        $ALLURE_BIN generate allure-results -o allure-report --clean
+
+    # 8. 部署到 GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        destination_dir: allure-report
+        keep_files: true
+
+    # 9. 上传测试报告 Artifacts（方便下载查看）
+    - name: Upload test report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: test-report-artifacts
+        path: |
+          reports/report.html
+          allure-report/

@@ -1,0 +1,52 @@
+{% extends 'tend/account/common/base.html' %}
+{% block css %}
+{{super()}}
+<link href="{{ url_for('main.static', filename='css/account.css')}}" rel="stylesheet">
+<style>
+    .list-group-item {
+        background-color: inherit;
+    }
+</style>
+{% endblock %}
+{% block contents %}
+
+<div class="container">
+    <div class="row justify-content-md-center mt-5">
+        <div class="col-md-12 text-center">
+            <h2>欢迎 {{current_user.name}}</h2>
+        </div>
+        
+        <ul class="list-group">
+            <li class="list-group-item text-center border-0" id="profile-avatar">
+                <img class="avatar" src="{{current_user.avatar or url_for('main.static', filename='img/avatar.png')}}"
+                    alt="{{current_user.name}}">
+            </li>
+            <li class="list-group-item  border-0">
+                <span class="font-weight-bold">账 号：</span>
+                <span>{{current_user.username}}</span>
+            </li>
+            <li class="list-group-item  border-0">
+                <span class="font-weight-bold">昵 称：</span>
+                <span>{{current_user.name or ''}}</span>
+            </li>
+            <li class="list-group-item  border-0">
+                <span class="font-weight-bold">邮 箱：</span>
+                <span>{{current_user.email or '无'}}</span>
+            </li>
+            <li class="list-group-item  border-0">
+                <span class="font-weight-bold">手 机：</span>
+                <span>{{current_user.mobile or '无'}}</span>
+            </li>
+            <li class="list-group-item  border-0">
+                <span class="font-weight-bold">会 员：</span>
+                <span>{{current_user.user_type_name()}}</span>
+            </li>
+        </ul>
+    </div>
+    
+
+</div>
+{% endblock %}
+{% block js %}
+{{ super() }}
+{% endblock %}

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="refresh" content="3;url={{url_for('.vip_pay')}}" />
+  </head>
+  <body>
+    <form method="post" id="myform" action="{{url_for('.auto_vip_apy')}}">
+        <input type="hidden" name="token" value="{{request.values.get('token','')}}">
+    </form>
+    <script type="text/javascript">
+        // window.location.href = '/account/vip_pay/';
+        document.forms["myform"].submit();
+    </script>
+  </body>
+</html>

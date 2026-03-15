@@ -1,0 +1,95 @@
+{% extends 'tend/common/base.html' %}
+{% import "tend/macros/_patination.html" as page_macros %}
+{% import "tend/macros/_flash.html" as flash_macros %}
+{% block title %} {{category.seo_title or category.title}} {% endblock %}
+{% block keywords %} {{category.seo_keywords or category.title}} {% endblock %}
+{% block description %} {{category.seo_description or ''}} {% endblock %}
+{% block css %}
+{{super()}}
+<style>
+    .archive {
+        line-height: 2;
+    }
+
+    div.archive>ul:before {
+        display: none;
+    }
+
+    div.archive>ul>li:first-child:before {
+        background-color: white;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<!--面包导航-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-white border-0 rounded-6 mb-2 py-2 f-15">
+        <li class="breadcrumb-item">
+            <i class="fa fa-home mr-1"></i><a href="/">首页</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{url_for('.subject')}}">专题</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            {{category.title}}
+        </li>
+    </ol>
+</nav>
+<!--end-->
+<div class="card border-0 rounded-6 mb-3">
+    <div class="card-body f-16 archive">
+        <h1 class="card-title text-center font-weight-bold text-info">{{category.title}}</h1>
+        <hr>
+        <div class="text-center f-13">
+            {% set last_time = (category.utime if category.utime else category.ctime).strftime("%Y年%m月%d日 %H:%M") %}
+            <span class="mx-2" data-toggle="tooltip" data-placement="bottom" title=""
+                data-original-title="最后编辑于{{last_time}}">{{last_time}}</span>
+            <span class="mx-2">
+                <span>文章数量：</span>
+                <span>{{category.articles_count()}}</span>
+            </span>
+        </div>
+        <div class="alert alert-info my-3 mx-1" role="alert">
+            <h3>专题简介</h3>
+            <hr class="mt-0">
+            <p class="mb-0">{{category.desp|safe}}</p>
+        </div>
+        <ul class="pl-4">
+
+            {% for c in category.children %}
+            <li class="subject-topic-li">
+                <h2 class="text-info mb-0" id="{{c.title}}" style="line-height: inherit;font-size: inherit">
+                    <a href="#{{c.title}}">{{c.title}}</a>
+                </h2>
+                <ul class="pl-2">
+                    {% for a in c.articles() %}
+                    <li class="">
+                        <a
+                            href="{{url_for('main.article',name=a.name)}}">{{a.publish_time.strftime("%y-%m-%d")}}&nbsp;&nbsp;{{a.title}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+
+            {% set other = category.articles() %}
+            {% if other|length > 0 %}
+            <li class="subject-topic-li">
+                <h2 class="text-info mb-0" id="其他" style="line-height: inherit;font-size: inherit">
+                    <a href="#其他">其他</a>
+                </h2>
+                <ul class="pl-2">
+                    {% for a in other %}
+                    <li class="">
+                        <a
+                            href="{{url_for('main.article',name=a.name)}}">{{a.publish_time.strftime("%y-%m-%d")}}&nbsp;&nbsp;{{a.title}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endif %}
+
+        </ul>
+    </div>
+</div>
+{% endblock %}
