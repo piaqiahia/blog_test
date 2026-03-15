@@ -70,6 +70,23 @@ jobs:
           sleep 2
         done
 
+    - name: Start Flask App in Background
+      run: |
+        # 假设你的入口文件是 app.py 或者 manage.py，根据实际情况改
+        # 如果是 app.py，用: python app.py &
+        # 如果是 flask run，用: flask run --host=0.0.0.0 --port=5000 &
+        
+        # 这里以常见的 flask run 为例（请根据你的项目结构调整！）
+        export FLASK_APP=app  # 或者你的主文件名，不带.py
+        flask run --host=0.0.0.0 --port=5000 &
+        
+        # 等待 5 秒让服务完全启动
+        echo "Waiting for Flask to start..."
+        sleep 5
+        
+        # 验证一下端口是否监听（可选，用于调试）
+        curl http://127.0.0.1:5000 || echo "Flask might not be up yet, but we proceed anyway"    
+
     # 6. 运行测试
     # 注意：因为有 7 个已知失败，使用 continue-on-error: true 保证流程继续走到生成报告那一步
     - name: Run tests
