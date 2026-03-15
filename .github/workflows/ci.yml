@@ -10,6 +10,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 允许写入代码（创建 gh-pages 分支）
+      pages: write     # 允许写入 Pages 设置（有些情况需要）
 
     # 定义服务容器（MySQL 和 Redis）
     services:
