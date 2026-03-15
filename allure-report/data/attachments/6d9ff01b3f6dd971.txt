@@ -1,0 +1,103 @@
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":9,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:24","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":19,"is_crawl":0,"name":"name_1773575184317","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575184,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184317","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:24","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":10,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:24","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":20,"is_crawl":0,"name":"name_1773575184355","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575184,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184355","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:24","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":11,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:24","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":21,"is_crawl":0,"name":"name_1773575184387","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575184,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184387","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:24","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":12,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:24","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":22,"is_crawl":0,"name":"name_1773575184419","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575184,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184419","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:24","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":13,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:24","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":23,"is_crawl":0,"name":"name_1773575184449","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575184,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184449","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:24","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":14,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:24","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":24,"is_crawl":0,"name":"name_1773575184479","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575184,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184479","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:24","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":15,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:25","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":25,"is_crawl":0,"name":"name_1773575184509","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575185,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184509","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:25","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":16,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:25","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":26,"is_crawl":0,"name":"name_1773575184541","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575185,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184541","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:25","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":17,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:25","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":27,"is_crawl":0,"name":"name_1773575184575","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575185,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184575","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:25","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":18,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-15 11:46:25","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":28,"is_crawl":0,"name":"name_1773575184610","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-15 11:46:24","remark":"","sn":1773575185,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u4e2d\\u6279\\u91cf\\u5220\\u9664 10_1_1773575184610","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-15 11:46:25","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+
+[Teardown] 正在清理 10篇测试文章
+[Teardown]清理完成
