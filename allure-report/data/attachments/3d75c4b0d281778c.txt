@@ -1,0 +1,25 @@
+
+============================================================
+开始执行测试：[管理员] (Fixture: admin_api)
+   预期结果：允许删除
+============================================================
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":8,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-03-18 07:35:52","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":12,"is_crawl":0,"name":"name_1773819351660","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-03-18 07:35:51","remark":"","sn":1773819352,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Perm_\\u7ba1\\u7406\\u5458_1_1773819351660","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-03-18 07:35:52","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+正在调用 remove 接口，发送者：管理员
+删除接口返回状态码：200
+删除接口返回 JSON: {'code': 0, 'data': [], 'msg': '操作成功'}
+业务层返回成功 (code=0)，需依赖数据库验证确认是否真删了。
+>>> 请求 URL: http://localhost:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+数据库查询结果：剩余 0 条
+[管理员] 测试通过！
+
+
+[Teardown] 正在清理 1篇测试文章
+[Teardown]清理完成
