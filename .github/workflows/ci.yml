@@ -119,18 +119,23 @@ jobs:
         REDIS_URL: redis://127.0.0.1:6379/1
       continue-on-error: true
 
-    - name: Verify Homepage Has Articles
+    - name: Check Homepage and Extract Article ID
       run: |
         echo "=== Checking if homepage has articles ==="
 
         # 获取首页 HTML
         curl http://127.0.0.1:5000/ > /tmp/homepage.html
 
+        # 直接打印 HTML 内容（调试用）
+        echo "=== Homepage HTML Content ==="
+        cat /tmp/homepage.html
+        echo "=== End of HTML Content ==="
+
         # 检查是否有文章链接
         if grep -q 'href="/article/' /tmp/homepage.html; then
           echo "✓ Homepage has article links"
 
-          # 提取第一个文章 ID（调试用）
+          # 提取第一个文章 ID
           ARTICLE_ID=$(grep -o 'href="/article/[^"]*"' /tmp/homepage.html | head -1 | sed 's/.*href="\/article\/\([^"]*\)".*/\1/')
           echo "First article ID found: $ARTICLE_ID"
 
@@ -141,7 +146,7 @@ jobs:
           echo "✗ No article links found on homepage!"
           echo "Using fallback ID: 1"
           sed -i 's|/article/${articleId}/|/article/1/|' jmeter/blog_test1.jmx
-        fi  
+        fi
 
     # 7. 【核心】下载并运行 JMeter（使用绝对路径）
     - name: Download and Setup JMeter
