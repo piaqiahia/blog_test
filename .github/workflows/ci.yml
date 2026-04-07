@@ -188,24 +188,37 @@ jobs:
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
         $ALLURE_BIN generate allure-results -o allure-report --clean
 
-    # 10. 创建独立的 JMeter 报告目录并修复路径
+    # 10. 准备 JMeter 报告
     - name: Prepare Standalone JMeter Report for Deploy
       run: |
         # 1. 创建目录并复制文件
         mkdir -p jmeter-report
         cp -r jmeter/report_html/* jmeter-report/
-        
-        # 2. 处理 _dashboard 文件夹
+
+        # 2. 【关键修复 A】处理 _dashboard
+        # 如果存在 _dashboard，重命名为 dashboard
         if [ -d "jmeter-report/_dashboard" ]; then
-          echo "Found _dashboard, renaming to dashboard..."
+          echo "Renaming _dashboard to dashboard..."
           mv jmeter-report/_dashboard jmeter-report/dashboard
-          find jmeter-report -type f -name "*.html" -exec sed -i 's|_dashboard/|dashboard/|g' {} +
         fi
 
-        # 3. 修复路径引用
-        # 确保资源引用是相对路径
+        # 3. 【关键修复 B】修改 HTML 里的引用路径
+        # 把所有的 _dashboard/ 替换为 dashboard/
+        find jmeter-report -type f -name "*.html" -exec sed -i 's|_dashboard/|dashboard/|g' {} +
+
+        # 4. 【关键修复 C】强制修复相对路径
+        # 确保所有资源引用都相对于当前目录，而不是根目录
+        # 这一步非常重要，防止浏览器去根目录找资源
         find jmeter-report -type f -name "*.html" -exec sed -i 's|src="/|src="./|g' {} +
         find jmeter-report -type f -name "*.html" -exec sed -i 's|href="/|href="./|g' {} +
+        
+        # 5. 【关键修复 D】添加 .nojekyll
+        # 这个空文件告诉 GitHub Pages：不要忽略下划线文件夹，不要运行 Jekyll
+        touch jmeter-report/.nojekyll
+        
+        # 6. 验证文件结构
+        echo "=== 最终的文件结构 ==="
+        ls -R jmeter-report
 
     # 11. 【修正】创建根目录跳转页 (这里改成了跳转到 JMeter 报告)
     - name: Create Root Redirect to JMeter
