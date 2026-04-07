@@ -179,7 +179,7 @@ jobs:
           echo "✓ JMeter test passed"
         fi
 
-    # 9. 【重要】生成 Allure 报告
+        # 9. 【重要】生成 Allure 报告
     - name: Generate Allure Report
       run: |
         rm -rf allure allure-report/*
@@ -188,12 +188,7 @@ jobs:
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
         $ALLURE_BIN generate allure-results -o allure-report --clean
 
-    - name: Create .nojekyll for GitHub Pages
-      run: |
-        touch allure-report/.nojekyll
-        touch jmeter-report/.nojekyll    
-
-    # 10. 【新增】创建独立的 JMeter 报告目录（为了有独立 URL）
+    # 10. 【新增】创建独立的 JMeter 报告目录（为了有独立 URL）- 必须在创建 .nojekyll 之前
     - name: Prepare Standalone JMeter Report for Deploy
       run: |
         # 在 allure-report 同级创建一个 jmeter-report 目录
@@ -203,7 +198,15 @@ jobs:
         # 创建一个简单的索引页方便访问
         echo "<html><head><meta http-equiv='refresh' content='0; url=allure-report/index.html' /></head><body>Redirecting to Allure Report...</body></html>" > index.html
 
-    # 11. 部署到 GitHub Pages
+    # 11. 创建 .nojekyll 文件（现在目录已经存在了）
+    - name: Create .nojekyll for GitHub Pages
+      run: |
+        touch allure-report/.nojekyll
+        touch jmeter-report/.nojekyll
+        echo "Created .nojekyll files for both reports"
+        ls -la  # 调试用，查看目录结构
+
+    # 12. 部署到 GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
@@ -215,7 +218,7 @@ jobs:
         # 确保部署根目录下的文件
         force_orphan: true
 
-    # 12. 上传 Artifacts
+    # 13. 上传 Artifacts
     - name: Upload test report
       uses: actions/upload-artifact@v4
       if: always()
