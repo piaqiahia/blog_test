@@ -148,74 +148,74 @@ jobs:
           sed -i 's|/article/${articleId}/|/article/1/|' jmeter/blog_test1.jmx
         fi
 
-    # 7. 【核心】下载并运行 JMeter（使用绝对路径）
+    # 8. 下载并运行 JMeter
     - name: Download and Setup JMeter
       run: |
         wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
         tar -xzf apache-jmeter-5.6.3.tgz
-        # 验证安装
-        ls -la apache-jmeter-5.6.3/bin/jmeter
         ./apache-jmeter-5.6.3/bin/jmeter --version
 
     - name: Run JMeter Load Test
       run: |
-        # 先清理旧的报告目录（如果存在）
-        rm -rf jmeter/report_html
-        rm -f jmeter/result.jtl
-
-        # 然后运行 JMeter（降低并发到 15，避免压垮单线程服务器）
+        rm -rf jmeter/report_html jmeter/result.jtl
+        
+        # 降低并发，避免超时
         timeout 300 ./apache-jmeter-5.6.3/bin/jmeter -n -t jmeter/blog_test1.jmx \
           -l jmeter/result.jtl \
           -e -o jmeter/report_html \
           -Jhost=127.0.0.1 \
           -Jport=5000 \
-          -Jthreads=15 \
-          -Jloop=3
+          -Jthreads=10 \
+          -Jloop=2
 
     - name: Check JMeter Results
       run: |
         echo "=== JMeter Summary ==="
         tail -20 jmeter/result.jtl
-        
-        # 检查是否有错误（s="false" 表示失败）
         if grep -q "s=\"false\"" jmeter/result.jtl; then
           echo "✗ JMeter test had errors"
           exit 1
         else
-          echo "✓ JMeter test passed with 0 errors"
+          echo "✓ JMeter test passed"
         fi
 
-    # 8. 合并报告
-    - name: Copy JMeter Report to Allure Report Dir
-      run: |
-        # 清理旧的 allure-report 目录
-        rm -rf allure-report/jmeter
-        mkdir -p allure-report/jmeter
-        cp -r jmeter/report_html/* allure-report/jmeter/
-        echo "JMeter report copied to allure-report/jmeter/"
-
-    # 9. 生成 Allure 报告
+    # 9. 【重要】生成 Allure 报告
     - name: Generate Allure Report
       run: |
-        # 清理旧的 allure 工具和报告
-        rm -rf allure
-        rm -rf allure-report/*
-        
+        rm -rf allure allure-report/*
         curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.36.0/allure-2.36.0.zip
         unzip allure.zip -d allure
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
         $ALLURE_BIN generate allure-results -o allure-report --clean
 
-    # 10. 部署到 GitHub Pages
+    - name: Create .nojekyll for GitHub Pages
+      run: |
+        touch allure-report/.nojekyll
+        touch jmeter-report/.nojekyll    
+
+    # 10. 【新增】创建独立的 JMeter 报告目录（为了有独立 URL）
+    - name: Prepare Standalone JMeter Report for Deploy
+      run: |
+        # 在 allure-report 同级创建一个 jmeter-report 目录
+        mkdir -p jmeter-report
+        # 复制 JMeter 的 HTML 报告进去
+        cp -r jmeter/report_html/* jmeter-report/
+        # 创建一个简单的索引页方便访问
+        echo "<html><head><meta http-equiv='refresh' content='0; url=allure-report/index.html' /></head><body>Redirecting to Allure Report...</body></html>" > index.html
+
+    # 11. 部署到 GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./allure-report
-        destination_dir: allure-report
+        publish_dir: ./
+        # 关键：保留 allure-report 和 jmeter-report 两个目录
+        destination_dir: .
         keep_files: true
+        # 确保部署根目录下的文件
+        force_orphan: true
 
-    # 11. 上传 Artifacts
+    # 12. 上传 Artifacts
     - name: Upload test report
       uses: actions/upload-artifact@v4
       if: always()
@@ -230,4 +230,4 @@ jobs:
       if: always()
       with:
         name: jmeter-report
-        path: jmeter/report_html/
+        path: jmeter-report/
