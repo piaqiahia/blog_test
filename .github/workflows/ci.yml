@@ -188,23 +188,25 @@ jobs:
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
         $ALLURE_BIN generate allure-results -o allure-report --clean
 
-    # 10. 【新增】创建独立的 JMeter 报告目录（为了有独立 URL）- 必须在创建 .nojekyll 之前
+    # 10. 【新增】创建独立的 JMeter 报告目录
     - name: Prepare Standalone JMeter Report for Deploy
       run: |
-        # 在 allure-report 同级创建一个 jmeter-report 目录
         mkdir -p jmeter-report
-        # 复制 JMeter 的 HTML 报告进去
         cp -r jmeter/report_html/* jmeter-report/
-        # 创建一个简单的索引页方便访问
+        
+        # 修复相对路径：告诉浏览器资源在根目录下的 blog_test 子路径
+        # 请把 blog_test 换成你的实际仓库名
+        sed -i 's|<head>|<head><base href="/blog_test/">|' jmeter-report/index.html
+        
+        # 根目录跳转页
         echo "<html><head><meta http-equiv='refresh' content='0; url=allure-report/index.html' /></head><body>Redirecting to Allure Report...</body></html>" > index.html
 
-    # 11. 创建 .nojekyll 文件（现在目录已经存在了）
+    # 11. 创建 .nojekyll (双重保险)
     - name: Create .nojekyll for GitHub Pages
       run: |
         touch allure-report/.nojekyll
         touch jmeter-report/.nojekyll
-        echo "Created .nojekyll files for both reports"
-        ls -la  # 调试用，查看目录结构
+        echo "Created .nojekyll files"
 
     # 12. 部署到 GitHub Pages
     - name: Deploy to GitHub Pages
