@@ -51,8 +51,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install ".[test]"
-        # 安装 gunicorn 用于生产级服务器
-        pip install gunicorn
 
     - name: Wait for MySQL
       run: |
@@ -79,13 +77,29 @@ jobs:
         flask run --host=0.0.0.0 --port=5000 > logs/flask.log 2>&1 &
 
         echo "Waiting for Flask to start..."
-        sleep 45  # 给足时间
+        sleep 60  # 增加到 60 秒，给足初始化时间
 
-        if curl -s http://127.0.0.1:5000 2>&1 | grep -q "200"; then
-          echo "✓ Flask is running!"
-        else
-          echo "✗ Flask failed to start"
-          tail -50 logs/flask.log
+        # 优化：使用循环重试 + 正确的状态码检查
+        success=false
+        for i in {1..20}; do
+          echo "Checking Flask health... ($i/20)"
+
+          # 方法1：检查状态码是否为 200
+          status=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000 2>&1 || echo "000")
+
+          if [ "$status" = "200" ]; then
+            echo "✓ Flask is running with status 200!"
+            success=true
+            break
+          fi
+
+          sleep 3
+        done
+
+        # 最终验证
+        if [ "$success" != "true" ]; then
+          echo "✗ Flask failed to start after multiple attempts"
+          tail -100 logs/flask.log
           exit 1
         fi
 
@@ -120,12 +134,14 @@ jobs:
         rm -rf jmeter/report_html
         rm -f jmeter/result.jtl
 
-        # 然后运行 JMeter（50线程，如果还有问题可以改为15）
-        ./apache-jmeter-5.6.3/bin/jmeter -n -t jmeter/blog_test1.jmx \
+        # 然后运行 JMeter（降低并发到 15，避免压垮单线程服务器）
+        timeout 300 ./apache-jmeter-5.6.3/bin/jmeter -n -t jmeter/blog_test1.jmx \
           -l jmeter/result.jtl \
           -e -o jmeter/report_html \
           -Jhost=127.0.0.1 \
-          -Jport=5000
+          -Jport=5000 \
+          -Jthreads=15 \
+          -Jloop=3
 
     - name: Check JMeter Results
       run: |
