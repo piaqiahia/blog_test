@@ -179,7 +179,7 @@ jobs:
           echo "✓ JMeter test passed"
         fi
 
-        # 9. 【重要】生成 Allure 报告
+    # 9. 【重要】生成 Allure 报告
     - name: Generate Allure Report
       run: |
         rm -rf allure allure-report/*
@@ -188,17 +188,32 @@ jobs:
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
         $ALLURE_BIN generate allure-results -o allure-report --clean
 
-    # 10. 【新增】创建独立的 JMeter 报告目录
+    # 10. 【核心修复】创建独立的 JMeter 报告目录并修复路径
     - name: Prepare Standalone JMeter Report for Deploy
       run: |
+        # 1. 创建目录并复制文件
         mkdir -p jmeter-report
         cp -r jmeter/report_html/* jmeter-report/
         
-        # 修复相对路径：告诉浏览器资源在根目录下的 blog_test 子路径
-        # 请把 blog_test 换成你的实际仓库名
+        # 2. 【关键修复 A】处理 _dashboard 文件夹
+        # GitHub Pages 会屏蔽下划线开头的文件夹，必须重命名
+        if [ -d "jmeter-report/_dashboard" ]; then
+          echo "Found _dashboard, renaming to dashboard..."
+          mv jmeter-report/_dashboard jmeter-report/dashboard
+          # 同时修改所有 HTML 文件里的引用路径
+          find jmeter-report -type f -name "*.html" -exec sed -i 's|_dashboard/|dashboard/|g' {} +
+        fi
+
+        # 3. 【关键修复 B】将所有绝对路径 (/xxx) 改为相对路径 (xxx)
+        # 防止浏览器去根目录找资源
+        find jmeter-report -type f -name "*.html" -exec sed -i 's|src="/|src="|g' {} +
+        find jmeter-report -type f -name "*.html" -exec sed -i 's|href="/|href="|g' {} +
+        
+        # 4. 【关键修复 C】添加 base 标签 (指向仓库名)
+        # 确保即使有相对路径，也能正确解析到 /blog_test/ 子目录
         sed -i 's|<head>|<head><base href="/blog_test/">|' jmeter-report/index.html
         
-        # 根目录跳转页
+        # 5. 创建根目录跳转页
         echo "<html><head><meta http-equiv='refresh' content='0; url=allure-report/index.html' /></head><body>Redirecting to Allure Report...</body></html>" > index.html
 
     # 11. 创建 .nojekyll (双重保险)
@@ -206,33 +221,15 @@ jobs:
       run: |
         touch allure-report/.nojekyll
         touch jmeter-report/.nojekyll
+        # 在根目录也放一个，防止意外
+        touch .nojekyll
         echo "Created .nojekyll files"
 
-    # 12. 部署到 GitHub Pages
+    # 12. 部署到 GitHub Pages (修正版)
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./
-        # 关键：保留 allure-report 和 jmeter-report 两个目录
         destination_dir: .
         keep_files: true
-        # 确保部署根目录下的文件
-        force_orphan: true
-
-    # 13. 上传 Artifacts
-    - name: Upload test report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: test-report-artifacts
-        path: |
-          reports/report.html
-          allure-report/
-
-    - name: Upload JMeter Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: jmeter-report
-        path: jmeter-report/
