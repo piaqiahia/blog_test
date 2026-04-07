@@ -417,7 +417,14 @@ CREATE TABLE `cms_theme` (
 
 LOCK TABLES `cms_theme` WRITE;
 /*!40000 ALTER TABLE `cms_theme` DISABLE KEYS */;
-INSERT INTO `cms_theme` VALUES ('Tend','tend','Tend 主题','','系统','1.0.0',0,0,1,'2025-10-26 23:01:02',1,'2025-10-26 23:07:50',NULL,0,'',1),('Test','test','Test 主题','','系统','1.0.0',1,0,2,'2025-10-26 23:01:02',1,'2025-10-26 23:07:50',NULL,0,'',1);
+-- 使用 ON DUPLICATE KEY UPDATE 确保幂等性
+INSERT INTO `cms_theme` (name, code, description, preview_img, author, version, is_active, sn, id, ctime, create_by, utime, update_by, deleted, remark, org_id)
+VALUES
+('Tend', 'tend', 'Tend 主题', '', '系统', '1.0.0', 1, 0, 1, '2025-10-26 23:01:02', 1, NOW(), NULL, 0, '', 1),
+('Test', 'test', 'Test 主题', '', '系统', '1.0.0', 0, 0, 2, '2025-10-26 23:01:02', 1, NOW(), NULL, 0, '', 1)
+ON DUPLICATE KEY UPDATE
+  is_active = VALUES(is_active),  -- 如果已存在，强制更新 is_active 为上面 VALUES 里的值
+  utime = NOW();                   -- 更新时间戳
 /*!40000 ALTER TABLE `cms_theme` ENABLE KEYS */;
 UNLOCK TABLES;
 
