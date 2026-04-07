@@ -82,6 +82,10 @@ jobs:
     # 6. 运行单元测试
     - name: Run tests
       run: |
+        # 清理旧的 Allure 结果
+        rm -rf allure-results
+        rm -rf reports/report.html
+        
         pytest h3blog_test/testcases -v \
           --alluredir=allure-results \
           --html=reports/report.html \
@@ -102,7 +106,11 @@ jobs:
 
     - name: Run JMeter Load Test
       run: |
-        # 使用绝对路径运行 JMeter
+        # 先清理旧的报告目录（如果存在）
+        rm -rf jmeter/report_html
+        rm -f jmeter/result.jtl
+
+        # 然后运行 JMeter
         ./apache-jmeter-5.6.3/bin/jmeter -n -t jmeter/blog_test1.jmx \
           -l jmeter/result.jtl \
           -e -o jmeter/report_html \
@@ -125,6 +133,8 @@ jobs:
     # 8. 合并报告
     - name: Copy JMeter Report to Allure Report Dir
       run: |
+        # 清理旧的 allure-report 目录
+        rm -rf allure-report/jmeter
         mkdir -p allure-report/jmeter
         cp -r jmeter/report_html/* allure-report/jmeter/
         echo "JMeter report copied to allure-report/jmeter/"
@@ -132,6 +142,10 @@ jobs:
     # 9. 生成 Allure 报告
     - name: Generate Allure Report
       run: |
+        # 清理旧的 allure 工具和报告
+        rm -rf allure
+        rm -rf allure-report/*
+        
         curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.36.0/allure-2.36.0.zip
         unzip allure.zip -d allure
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
