@@ -1,0 +1,32 @@
+
+============================================================
+开始执行测试：[普通用户] (Fixture: normal_api)
+   预期结果：禁止删除
+============================================================
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":9,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-04-07 18:00:52","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":23,"is_crawl":0,"name":"name_1775584852083","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-04-07 18:00:52","remark":"","sn":1775584852,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Perm_\\u666e\\u901a\\u7528\\u6237_1_1775584852083","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-04-07 18:00:52","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+正在调用 remove 接口，发送者：普通用户
+删除接口返回状态码：200
+响应不是 JSON (可能是 HTML 登录页或错误页): 
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>登录</title>
+    <meta name=...
+发现未登录！普通用户 Session 丢失或未生效。
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":9,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-04-07 18:00:52","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":23,"is_crawl":0,"name":"name_1775584852083","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-04-07 18:00:52","remark":"","sn":1775584852,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Perm_\\u666e\\u901a\\u7528\\u6237_1_1775584852083","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-04-07 18:00:52","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+数据库查询结果：剩余 1 条
+[普通用户] 测试通过！
+
+
+[Teardown] 正在清理 1篇测试文章
+[Teardown]清理完成
