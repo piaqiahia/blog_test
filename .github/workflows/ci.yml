@@ -45,7 +45,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y default-jre
+        sudo apt-get install -y default-jre wget
 
     - name: Install dependencies
       run: |
@@ -91,16 +91,19 @@ jobs:
         REDIS_URL: redis://127.0.0.1:6379/1
       continue-on-error: true
 
-    # 7. 【核心】使用 Action 安装并运行 JMeter
-    - name: Setup JMeter
-      uses: deliverymuch/setup-jmeter@v1
-      with:
-        jmeter-version: '5.6.3'
+    # 7. 【核心】下载并运行 JMeter（使用绝对路径）
+    - name: Download and Setup JMeter
+      run: |
+        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
+        tar -xzf apache-jmeter-5.6.3.tgz
+        # 验证安装
+        ls -la apache-jmeter-5.6.3/bin/jmeter
+        ./apache-jmeter-5.6.3/bin/jmeter --version
 
     - name: Run JMeter Load Test
       run: |
-        # 注意：请确保 jmeter/blog_test1.jmx 文件存在于仓库中
-        jmeter -n -t jmeter/blog_test1.jmx \
+        # 使用绝对路径运行 JMeter
+        ./apache-jmeter-5.6.3/bin/jmeter -n -t jmeter/blog_test1.jmx \
           -l jmeter/result.jtl \
           -e -o jmeter/report_html \
           -Jhost=127.0.0.1 \
@@ -111,7 +114,7 @@ jobs:
         echo "=== JMeter Summary ==="
         tail -20 jmeter/result.jtl
         
-        # 简单检查是否有失败的请求
+        # 检查是否有错误（s="false" 表示失败）
         if grep -q "s=\"false\"" jmeter/result.jtl; then
           echo "✗ JMeter test had errors"
           exit 1
@@ -132,8 +135,7 @@ jobs:
         curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.36.0/allure-2.36.0.zip
         unzip allure.zip -d allure
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
-        # 如果是子路径，记得加 --base-url
-        $ALLURE_BIN generate allure-results -o allure-report --clean --base-url /blog_test
+        $ALLURE_BIN generate allure-results -o allure-report --clean
 
     # 10. 部署到 GitHub Pages
     - name: Deploy to GitHub Pages
