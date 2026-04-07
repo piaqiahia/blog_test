@@ -964,6 +964,45 @@ CREATE TABLE `vip_price` (
 -- Dumping data for table `vip_price`
 --
 
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('Flask 性能优化指南', 'flask-performance', 'admin', 'Flask 性能优化的详细指南...', '<p>Flask 性能优化的详细指南...</p>', '学习如何优化 Flask 应用性能', '/static/images/flask.jpg', 1, 1024, '[]', 5, '2024-01-15 10:00:00', '张三', 1, 1, '<p>Flask 性能优化的详细指南...</p>', 0, 99.00, 1, 0, NULL, NULL, '2024-01-15 10:00:00', '2024-01-15 10:00:00', 'admin', 0, '热门文章', 1);
+
+-- 文章2
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('Python 并发编程', 'python-concurrency', 'admin', 'Python 并发编程的各种方法...', '<p>Python 并发编程的各种方法...</p>', '掌握 Python 并发编程技巧', '/static/images/python.jpg', 1, 2048, '[]', 12, '2024-01-16 11:00:00', '李四', 1, 2, '<p>Python 并发编程的各种方法...</p>', 0, 89.00, 2, 0, NULL, NULL, '2024-01-16 11:00:00', '2024-01-16 11:00:00', 'admin', 0, '推荐文章', 1);
+
+-- 文章3
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('Docker 入门教程', 'docker-tutorial', 'admin', 'Docker 容器化技术入门...', '<p>Docker 容器化技术入门...</p>', '从零开始学习 Docker', '/static/images/docker.jpg', 1, 1536, '[]', 8, '2024-01-17 12:00:00', '王五', 1, 3, '<p>Docker 容器化技术入门...</p>', 0, 79.00, 3, 0, NULL, NULL, '2024-01-17 12:00:00', '2024-01-17 12:00:00', 'admin', 0, '新手必读', 1);
+
+-- 文章4
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('MySQL 索引优化', 'mysql-index', 'admin', 'MySQL 索引优化最佳实践...', '<p>MySQL 索引优化最佳实践...</p>', '提升数据库查询性能', '/static/images/mysql.jpg', 1, 3072, '[]', 20, '2024-01-18 13:00:00', '赵六', 1, 4, '<p>MySQL 索引优化最佳实践...</p>', 0, 95.00, 4, 0, NULL, NULL, '2024-01-18 13:00:00', '2024-01-18 13:00:00', 'admin', 0, '数据库', 1);
+
+-- 文章5
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('Redis 缓存策略', 'redis-cache', 'admin', 'Redis 缓存的各种策略...', '<p>Redis 缓存的各种策略...</p>', '高效使用 Redis 缓存', '/static/images/redis.jpg', 1, 2560, '[]', 15, '2024-01-19 14:00:00', '钱七', 1, 5, '<p>Redis 缓存的各种策略...</p>', 0, 85.00, 5, 0, NULL, NULL, '2024-01-19 14:00:00', '2024-01-19 14:00:00', 'admin', 0, '缓存', 1);
+
+-- 文章6
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('Git 版本控制', 'git-version-control', 'admin', 'Git 版本控制系统使用指南...', '<p>Git 版本控制系统使用指南...</p>', '掌握 Git 的基本操作', '/static/images/git.jpg', 1, 1792, '[]', 10, '2024-01-20 15:00:00', '孙八', 1, 6, '<p>Git 版本控制系统使用指南...</p>', 0, 69.00, 6, 0, NULL, NULL, '2024-01-20 15:00:00', '2024-01-20 15:00:00', 'admin', 0, '工具', 1);
+
+-- 文章7
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('Linux 命令大全', 'linux-commands', 'admin', '常用 Linux 命令汇总...', '<p>常用 Linux 命令汇总...</p>', 'Linux 日常命令速查', '/static/images/linux.jpg', 1, 4096, '[]', 25, '2024-01-21 16:00:00', '周九', 1, 7, '<p>常用 Linux 命令汇总...</p>', 0, 59.00, 7, 0, NULL, NULL, '2024-01-21 16:00:00', '2024-01-21 16:00:00', 'admin', 0, '运维', 1);
+
+-- 文章8
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('机器学习入门', 'machine-learning', 'admin', '机器学习基础知识介绍...', '<p>机器学习基础知识介绍...</p>', 'AI 时代的必备技能', '/static/images/ml.jpg', 1, 5120, '[]', 30, '2024-01-22 17:00:00', '吴十', 1, 8, '<p>机器学习基础知识介绍...</p>', 0, 129.00, 8, 0, NULL, NULL, '2024-01-22 17:00:00', '2024-01-22 17:00:00', 'admin', 0, 'AI', 1);
+
+-- 文章9
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('前端开发技巧', 'frontend-tips', 'admin', '前端开发的实用技巧分享...', '<p>前端开发的实用技巧分享...</p>', '提升前端开发效率', '/static/images/frontend.jpg', 1, 1280, '[]', 6, '2024-01-23 18:00:00', '郑十一', 1, 9, '<p>前端开发的实用技巧分享...</p>', 0, 75.00, 9, 0, NULL, NULL, '2024-01-23 18:00:00', '2024-01-23 18:00:00', 'admin', 0, '前端', 1);
+
+-- 文章10
+INSERT INTO cms_article (title, name, editor, content, content_html, summary, thumbnail, state, vc, toc, comment_num, publish_time, author, create_by, category_id, h_content, h_role, price, sn, is_crawl, origin_url, origin_author, ctime, utime, update_by, deleted, remark, org_id)
+VALUES ('云计算架构', 'cloud-architecture', 'admin', '云计算架构设计原理...', '<p>云计算架构设计原理...</p>', '理解云计算的核心概念', '/static/images/cloud.jpg', 1, 2048, '[]', 14, '2024-01-24 19:00:00', '王十二', 1, 10, '<p>云计算架构设计原理...</p>', 0, 119.00, 10, 0, NULL, NULL, '2024-01-24 19:00:00', '2024-01-24 19:00:00', 'admin', 0, '云计算', 1);
+
 LOCK TABLES `vip_price` WRITE;
 /*!40000 ALTER TABLE `vip_price` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vip_price` ENABLE KEYS */;
