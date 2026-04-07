@@ -115,7 +115,8 @@ class BaseConfig(object):
 
     GEOIP2_PATH = os.getenv('GEOIP2_PATH', 'D:\\tools\\GeoLite2-City_20211019\\GeoLite2-City.mmdb') # 根据ip定位城市数据库位置GeoLite2-City.mmdb
 
-    CACHE_TYPE = os.getenv('CACHE_TYPE', "SimpleCache") #RedisCache
+    # CACHE_TYPE = os.getenv('CACHE_TYPE', "SimpleCache") #RedisCache
+    CACHE_TYPE = "RedisCache"
     CACHE_REDIS_URL = os.getenv('CACHE_REDIS_URL', 'redis://localhost:6379/0')
     CACHE_DEFAULT_TIMEOUT = 300 # 缓存时间
     APP_DEBUG = os.getenv('APP_DEBUG', 'False') == 'True'

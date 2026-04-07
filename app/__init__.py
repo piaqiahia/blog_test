@@ -32,6 +32,14 @@ def create_app(config_name=None):
     app = Flask(__name__)
     app.config['CONFIG_NAME'] = config_name
     app.config.from_object(config[config_name])
+    # ========== 添加这段调试代码 ==========
+    print("\n" + "=" * 60)
+    print("🔍 调试：检查 app.config 中的缓存配置")
+    print(f"   CACHE_TYPE = {app.config.get('CACHE_TYPE')}")
+    print(f"   CACHE_REDIS_URL = {app.config.get('CACHE_REDIS_URL')}")
+    print(f"   CACHE_DEFAULT_TIMEOUT = {app.config.get('CACHE_DEFAULT_TIMEOUT')}")
+    print("=" * 60 + "\n")
+    # ========== 调试代码结束 ==========
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
     app.json_provider_class = CustomJSONProvider
@@ -84,6 +92,12 @@ def register_logging(app):
 
 
 def register_extensions(app: Flask):
+    # 在初始化缓存之前，先打印配置
+    print("=" * 60)
+    print("调试：检查 app.config 中的缓存配置")
+    print(f"  CACHE_TYPE = {app.config.get('CACHE_TYPE')}")
+    print(f"  CACHE_REDIS_URL = {app.config.get('CACHE_REDIS_URL')}")
+    print("=" * 60)
     db.init_app(app)
     csrf.init_app(app)
     login_manager.init_app(app)

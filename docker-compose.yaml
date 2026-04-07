@@ -15,13 +15,10 @@ services:
     volumes:
       - .:/app
       - ./logs:/app/logs
-    # 使用 > 符号可以让多行脚本更清晰，减少缩进错误
     command: >
       sh -c "
         echo '等待数据库完全就绪...';
-        # 循环尝试连接，最多重试 90 次
         for i in {1..90}; do
-          # 尝试用 Python 建立真实的数据库连接
           if python -c 'import pymysql; pymysql.connect(host=\"db\", user=\"root\", password=\"1511054331\", database=\"h3blog\", connect_timeout=2)'; then
             echo '数据库连接成功，启动 Flask 应用';
             flask run --host=0.0.0.0;
@@ -61,61 +58,70 @@ services:
       start_period: 30s
     restart: always
 
-  phpmyadmin:
-    image: phpmyadmin:5.2-apache
-    container_name: h3blog_phpmyadmin
-    environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: 1511054331
-    ports:
-      - "8080:80"
-    depends_on:
-      - db
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  redis:
-    image: redis:7-alpine
-    container_name: h3blog_redis
-    ports:
-      - "6379:6379"
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  # 测试服务（使用 h3blog_test 目录名）
+  # 测试服务
   test:
     build: .
-    # 使用你原本的 run_test.py 脚本
     command: sh -c "python h3blog_test/run_test.py"
     volumes:
       - .:/app
-      # 把报告目录挂载出来，方便在宿主机查看
       - ./h3blog_test/reports:/app/h3blog_test/reports
       - ./h3blog_test/allure-results:/app/h3blog_test/allure-results
       - ./h3blog_test/allure-report:/app/h3blog_test/allure-report
     environment:
       - FLASK_ENV=testing
-      # 注意：这里连接的是主数据库 h3blog，而不是 h3blog_test
-      # 因为你的初始化脚本都在 h3blog 里
       - DATABASE_URL=mysql+pymysql://root:1511054331@db:3306/h3blog?charset=utf8mb4
       - REDIS_URL=redis://redis:6379/1
       - PYTHONPATH=/app
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
-      # 关键：要等 web 服务启动完成
       web:
         condition: service_started
     networks:
       - app-network
-    # 加上 tty 和 stdin_open 防止容器立即退出（虽然脚本会自己退出）
     tty: true
     stdin_open: true
+
+  # JMeter 压测服务（方案二：挂载卷到宿主机）
+  jmeter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: h3blog_jmeter
+    command: [
+      "sh", "-c",
+      "echo '=== 等待 Web 服务启动 ===' && \
+       sleep 30 && \
+       echo '=== 清理旧报告 ===' && \
+       rm -rf /app/jmeter/report_html && \
+       rm -f /app/jmeter/result.jtl && \
+       echo '=== 开始执行 JMeter 压测 ===' && \
+       /opt/jmeter/bin/jmeter -n -t /app/jmeter/blog_test1.jmx \
+         -l /app/jmeter/result.jtl \
+         -e -o /app/jmeter/report_html && \
+       echo '=== 压测完成 ===' && \
+       if [ -f /app/jmeter/report_html/index.html ]; then \
+         echo '✓ 报告生成成功'; \
+       else \
+         echo '✗ 报告生成失败'; exit 1; \
+       fi && \
+       echo '=== 容器已就绪 ===' && \
+       echo '手动启动服务器: docker exec h3blog_jmeter sh -c \"cd /app/jmeter/report_html && python3 -m http.server 8080\"' && \
+       tail -f /dev/null"
+    ]
+    volumes:
+      - ./jmeter:/app/jmeter
+    networks:
+      - app-network
+    depends_on:
+      web:
+        condition: service_started
+      db:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    ports:
+      - "8080:8080"
 
 networks:
   app-network:
@@ -124,4 +130,3 @@ networks:
 volumes:
   mysql-data:
     driver: local
-

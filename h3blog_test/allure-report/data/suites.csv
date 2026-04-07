@@ -1,73 +1,73 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","242","搜索场景：S02:模糊搜索常用词","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestSearch","test_article_list","",""
-"参数化异常测试：验证各种非法输入不会创建文章","469","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"参数化异常测试：验证各种非法输入不会创建文章","1035","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","failed","2026-03-15","","test_article","",""
-"
-        直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
-        ","15","安全测试：输入纯空格","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"","1357","权限测试：管理员尝试删除","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"验证文章核心流程的连贯性：创建-编辑-删除","2636","文章管理-03：新增-修改-删除端对端流程","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"验证传入不存在的ID时，接口返回友好错误","340","文章管理-05：修改不存在的文章ID","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"","394","分页场景：页码越界_负值","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
-"验证编辑文章后，列表和搜索接口能立即反映更新","1725","文章管理-06：编辑后列表/搜索同步验证","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"","267","搜索场景：S04:特殊字符安全","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestSearch","test_article_list","",""
-"","1313","权限测试：普通用户尝试删除","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"
-        直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
-        ","22","安全测试：输入空字符串","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"参数化异常测试：验证各种非法输入不会创建文章","599","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","failed","2026-03-15","","test_article","",""
-"","242","S01:精确搜索唯一标题","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestSearch","test_article_list","",""
-"参数化异常测试：验证各种非法输入不会创建文章","550","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","failed","2026-03-15","","test_article","",""
+"","222","S01:精确搜索唯一标题","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestSearch","test_article_list","",""
 "
         验证删除接口对异常 ID 或混合 ID 的处理，确保不报错、不误删。
         因为 -1 和 99999 系统中不存在这样的ID 因此无需为这两个用例创建文章
-        ","2680","边界测试：混合真实ID与不真实ID","h3blog_test.testcases","2026-03-15","failed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"","480","分页场景：页码越界_零值","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
+        ","558","边界测试：删除负数ID","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"参数化异常测试：验证各种非法输入不会创建文章","983","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","failed","2026-04-07","","test_article","",""
+"验证编辑文章后，列表和搜索接口能立即反映更新","2377","文章管理-06：编辑后列表/搜索同步验证","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"","241","搜索场景：S02:模糊搜索常用词","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestSearch","test_article_list","",""
+"参数化异常测试：验证各种非法输入不会创建文章","660","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"","1873","权限测试：普通用户尝试删除","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"","974","分页场景：页宽越界_负值","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"
+        验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
+        ","12176","正向测试：中批量删除 10","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"","534","分页场景：页码越界_负值","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"","2229","权限测试：管理员尝试删除","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"验证文章核心流程的连贯性：创建-编辑-删除","3378","文章管理-03：新增-修改-删除端对端流程","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
 "
         直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
-        ","22","安全测试：输入非数字字符","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
+        ","61","安全测试：输入空字符串","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"
+        直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
+        ","15","安全测试：输入非数字字符","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
 "
         验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
-        ","50196","正向测试：大批量删除 50（性能边界试探）","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"验证普通用户无法调用新增接口","95","文章管理-04：用户无权新增文章","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"参数化异常测试：验证各种非法输入不会创建文章","864","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","failed","2026-03-15","","test_article","",""
+        ","51190","正向测试：大批量删除 50（性能边界试探）","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"参数化异常测试：验证各种非法输入不会创建文章","685","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","failed","2026-04-07","","test_article","",""
+"参数化异常测试：验证各种非法输入不会创建文章","582","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
 "
-        验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
-        ","3451","正向测试：小批量删除3","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"
-        验证删除接口对异常 ID 或混合 ID 的处理，确保不报错、不误删。
-        因为 -1 和 99999 系统中不存在这样的ID 因此无需为这两个用例创建文章
-        ","149","边界测试：删除负数ID","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"
-        验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
-        ","1484","正向测试：单篇删除","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"","216","搜索场景：S03:搜索无结果","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestSearch","test_article_list","",""
-"","236","分页场景：页码越界_超大值","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
+        直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
+        ","59","安全测试：输入SQL尝试注入","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"","818","分页场景：页宽越界_零值","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
 "
         验证是否能删除不同状态的文章（特别是已下架文章，常出现逻辑漏洞）。
-        ","1515","状态测试: 删除已发布的文章","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"验证管理员会话下，用edit接口新增文章，验证文章的新增和删除","1709","文章管理-01: 管理员正常新增文章","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"","367","分页场景：首页_大页宽","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
-"","293","分页场景：首页_小页宽","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
-"
-        验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
-        ","11777","正向测试：中批量删除 10","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"
-        直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
-        ","12","安全测试：输入SQL尝试注入","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"参数化异常测试：验证各种非法输入不会创建文章","308","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"参数化异常测试：验证各种非法输入不会创建文章","485","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"参数化异常测试：验证各种非法输入不会创建文章","815","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","passed","2026-03-15","","test_article","",""
-"","231","分页场景：第二页_默认页宽","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
-"
-        验证是否能删除不同状态的文章（特别是已下架文章，常出现逻辑漏洞）。
-        ","1460","状态测试: 删除草稿的文章","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"","516","分页场景：页宽越界_零值","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
+        ","4263","状态测试: 删除草稿的文章","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"","780","分页场景：首页_大页宽","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
 "
         验证删除接口对异常 ID 或混合 ID 的处理，确保不报错、不误删。
         因为 -1 和 99999 系统中不存在这样的ID 因此无需为这两个用例创建文章
-        ","232","边界测试：删除不存在的ID","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestArticleRemove","test_article_remove","",""
-"参数化异常测试：验证各种非法输入不会创建文章","734","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","failed","2026-03-15","","test_article","",""
-"参数化异常测试：验证各种非法输入不会创建文章","1122","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-03-15","failed","2026-03-15","","test_article","",""
-"","547","分页场景：首页_默认页宽","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
-"","383","分页场景：页宽越界_负值","h3blog_test.testcases","2026-03-15","passed","2026-03-15","TestPagination","test_article_list","",""
+        ","465","边界测试：删除不存在的ID","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"","705","分页场景：首页_默认页宽","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"参数化异常测试：验证各种非法输入不会创建文章","546","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"验证管理员会话下，用edit接口新增文章，验证文章的新增和删除","1901","文章管理-01: 管理员正常新增文章","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"验证传入不存在的ID时，接口返回友好错误","649","文章管理-05：修改不存在的文章ID","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"","431","分页场景：页码越界_超大值","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"
+        直接调用底层 Session 发送数据，测试后端解析器的健壮性和安全性。
+        ","13","安全测试：输入纯空格","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"
+        验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
+        ","3347","正向测试：小批量删除3","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"参数化异常测试：验证各种非法输入不会创建文章","576","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"","402","搜索场景：S04:特殊字符安全","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestSearch","test_article_list","",""
+"参数化异常测试：验证各种非法输入不会创建文章","761","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","failed","2026-04-07","","test_article","",""
+"","627","分页场景：页码越界_零值","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"验证普通用户无法调用新增接口","246","文章管理-04：用户无权新增文章","h3blog_test.testcases","2026-04-07","passed","2026-04-07","","test_article","",""
+"","744","分页场景：首页_小页宽","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"","254","搜索场景：S03:搜索无结果","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestSearch","test_article_list","",""
+"参数化异常测试：验证各种非法输入不会创建文章","790","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","failed","2026-04-07","","test_article","",""
+"
+        验证不同数量级的文章删除功能是否正常，并逐一确认数据消失。
+        ","1266","正向测试：单篇删除","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"参数化异常测试：验证各种非法输入不会创建文章","1798","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","failed","2026-04-07","","test_article","",""
+"","583","分页场景：第二页_默认页宽","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestPagination","test_article_list","",""
+"
+        验证删除接口对异常 ID 或混合 ID 的处理，确保不报错、不误删。
+        因为 -1 和 99999 系统中不存在这样的ID 因此无需为这两个用例创建文章
+        ","2462","边界测试：混合真实ID与不真实ID","h3blog_test.testcases","2026-04-07","failed","2026-04-07","TestArticleRemove","test_article_remove","",""
+"参数化异常测试：验证各种非法输入不会创建文章","968","文章管理-02：新增文章异常场景参数化","h3blog_test.testcases","2026-04-07","failed","2026-04-07","","test_article","",""
+"
+        验证是否能删除不同状态的文章（特别是已下架文章，常出现逻辑漏洞）。
+        ","2834","状态测试: 删除已发布的文章","h3blog_test.testcases","2026-04-07","passed","2026-04-07","TestArticleRemove","test_article_remove","",""

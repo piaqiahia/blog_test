@@ -1,0 +1,50 @@
+{
+  "进入主页" : {
+    "transaction" : "进入主页",
+    "sampleCount" : 1394,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 754.2883787661408,
+    "medianResTime" : 782.0,
+    "minResTime" : 46.0,
+    "maxResTime" : 2366.0,
+    "pct1ResTime" : 1392.0,
+    "pct2ResTime" : 1496.25,
+    "pct3ResTime" : 1805.0,
+    "throughput" : 7.751636240289602,
+    "receivedKBytesPerSec" : 336.55861662278335,
+    "sentKBytesPerSec" : 0.8554051710475831
+  },
+  "Total" : {
+    "transaction" : "Total",
+    "sampleCount" : 2741,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 632.6351696461153,
+    "medianResTime" : 554.0,
+    "minResTime" : 39.0,
+    "maxResTime" : 2366.0,
+    "pct1ResTime" : 1249.0,
+    "pct2ResTime" : 1395.0,
+    "pct3ResTime" : 1674.58,
+    "throughput" : 15.212480783212436,
+    "receivedKBytesPerSec" : 507.3910162732197,
+    "sentKBytesPerSec" : 1.9282585115800221
+  },
+  "点击文章/模拟浏览" : {
+    "transaction" : "点击文章/模拟浏览",
+    "sampleCount" : 1347,
+    "errorCount" : 0,
+    "errorPct" : 0.0,
+    "meanResTime" : 506.73719376391955,
+    "medianResTime" : 485.0,
+    "minResTime" : 39.0,
+    "maxResTime" : 1552.0,
+    "pct1ResTime" : 745.0,
+    "pct2ResTime" : 836.5999999999995,
+    "pct3ResTime" : 1098.1599999999994,
+    "throughput" : 7.501169447352593,
+    "receivedKBytesPerSec" : 172.06399104537456,
+    "sentKBytesPerSec" : 1.078149537511416
+  }
+}

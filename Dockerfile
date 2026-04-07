@@ -1,50 +1,92 @@
-FROM python:3.10-slim
+# 直接使用官方 Python 3.11 slim 镜像
+FROM python:3.11-slim-bookworm
 
-WORKDIR /app
-
+# 设置环境变量
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
-    # 关键：确保 Java 在 PATH 中
-    JAVA_HOME=/usr/lib/jvm/default-java
+    JAVA_HOME=/opt/java/jdk8 \
+    ALLURE_VERSION=2.36.0 \
+    PATH=/opt/java/jdk8/bin:/opt/jmeter/bin:/opt/allure-${ALLURE_VERSION}/bin:/usr/local/bin:$PATH
 
-# 配置 apt 镜像源并安装系统依赖
-RUN sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
-    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
-    apt-get update && \
+# 创建工作目录
+WORKDIR /app
+RUN mkdir -p /app/logs && chmod 777 /app/logs
+
+# 安装系统基础依赖（用于 MySQL 客户端、SSL 等）
+# 同时安装 JDK 依赖
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        gcc \
+        ca-certificates \
         default-libmysqlclient-dev \
-        pkg-config \
-        default-jre-headless \
+        libssl-dev \
         wget \
+        curl \
         unzip \
-    && rm -rf /var/lib/apt/lists/*
+        && rm -rf /var/lib/apt/lists/*
+
+# 离线安装 JDK 8
+COPY ./depend/OpenJDK8U-jdk_x64_linux_hotspot_8u482b08.tar.gz /tmp/jdk.tar.gz
+
+RUN mkdir -p /opt/java && \
+    tar -xzf /tmp/jdk.tar.gz -C /opt/java && \
+    # 查找并移动 JDK 目录
+    JDK_DIR=$(find /opt/java -maxdepth 1 -type d -name "*jdk*" | head -n 1) && \
+    if [ -n "$JDK_DIR" ]; then \
+        mv "$JDK_DIR" /opt/java/jdk8; \
+    else \
+        echo "Error: JDK directory not found"; \
+        exit 1; \
+    fi && \
+    /opt/java/jdk8/bin/java -version && \
+    /opt/java/jdk8/bin/javac -version && \
+    rm -f /tmp/jdk.tar.gz
+
+# 离线安装 JMeter 5.6.3
+COPY ./depend/apache-jmeter-5.6.3.tgz /tmp/jmeter.tgz
+
+RUN mkdir -p /opt/jmeter && \
+    tar -xzf /tmp/jmeter.tgz -C /opt/jmeter --strip-components=1 && \
+    # 验证 JMeter
+    /opt/jmeter/bin/jmeter --version && \
+    # 清理
+    rm -f /tmp/jmeter.tgz
+
+# 安装 Allure
+COPY ./depend/allure-${ALLURE_VERSION}.tgz /tmp/allure.tgz
+
+RUN tar -xzf /tmp/allure.tgz -C /opt/ && \
+    ln -s /opt/allure-${ALLURE_VERSION}/bin/allure /usr/local/bin/allure && \
+    allure --version && \
+    rm /tmp/allure.tgz
+
+# 验证所有工具（添加调试信息）
+RUN echo "=== Python version ===" && \
+    python3 --version && \
+    echo "=== Java version ===" && \
+    java -version && \
+    echo "=== JMeter version ===" && \
+    jmeter --version && \
+    echo "=== Allure version ===" && \
+    allure --version && \
+    echo "=== PATH ===" && \
+    echo $PATH && \
+    echo "=== JAVA_HOME ===" && \
+    echo $JAVA_HOME && \
+    echo "=== Checking java binary ===" && \
+    which java && \
+    ls -la /opt/java/jdk8/bin/java
 
 # 配置 pip 镜像源
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-    pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
-
-# ===== 安装 Allure Commandline（使用本地文件 + 确保权限）=====
-ENV ALLURE_VERSION=2.36.0
-COPY allure-${ALLURE_VERSION}.tgz /tmp/
-
-RUN tar -xzf /tmp/allure-${ALLURE_VERSION}.tgz -C /opt/ && \
-    # 创建软链接
-    ln -s /opt/allure-${ALLURE_VERSION}/bin/allure /usr/local/bin/allure && \
-    # 关键：给所有二进制文件加执行权限
-    chmod +x /opt/allure-${ALLURE_VERSION}/bin/* && \
-    rm /tmp/allure-${ALLURE_VERSION}.tgz
-
-# 验证安装（这一步如果失败，构建会直接报错）
-RUN allure --version
+RUN pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip3 config set global.trusted-host pypi.tuna.tsinghua.edu.cn
 
 # 复制并安装项目依赖
 COPY pyproject.toml ./
-RUN pip install --no-cache-dir -e .
+RUN pip3 install --no-cache-dir -e .
 
 # 安装测试依赖
-RUN pip install --no-cache-dir \
+RUN pip3 install --no-cache-dir \
     pytest==9.0.2 \
     pytest-html==3.2.0 \
     allure-pytest==2.13.5 \
@@ -53,9 +95,6 @@ RUN pip install --no-cache-dir \
 # 复制应用代码
 COPY ./app ./app
 
-# 创建日志目录
-RUN mkdir -p /app/logs && chmod 777 /app/logs
-
 EXPOSE 5000
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000"]
