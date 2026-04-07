@@ -33,7 +33,7 @@ jobs:
           - 6379:6379
 
     steps:
-    # 1-5. 保持不变
+    # 1-5. 基础环境准备
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -79,7 +79,7 @@ jobs:
         sleep 15
         curl http://127.0.0.1:5000 || echo "Flask might not be up yet"
 
-    # 6. 运行单元测试（保持不变）
+    # 6. 运行单元测试
     - name: Run tests
       run: |
         pytest h3blog_test/testcases -v \
@@ -91,32 +91,27 @@ jobs:
         REDIS_URL: redis://127.0.0.1:6379/1
       continue-on-error: true
 
-    # 7. 【新增】下载并运行 JMeter
-    - name: Download and Setup JMeter
-      run: |
-        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
-        tar -xzf apache-jmeter-5.6.3.tgz
-        export PATH=$(pwd)/apache-jmeter-5.6.3/bin:$PATH
-        jmeter --version
+    # 7. 【核心】使用 Action 安装并运行 JMeter
+    - name: Setup JMeter
+      uses: deliverymuch/setup-jmeter@v1
+      with:
+        jmeter-version: '5.6.3'
 
     - name: Run JMeter Load Test
       run: |
-        # 运行 JMeter 压测
-        # 注意：jmx 文件在 jmeter/blog_test1.jmx
-        # 报告输出到 jmeter/report_html/
+        # 注意：请确保 jmeter/blog_test1.jmx 文件存在于仓库中
         jmeter -n -t jmeter/blog_test1.jmx \
           -l jmeter/result.jtl \
           -e -o jmeter/report_html \
           -Jhost=127.0.0.1 \
           -Jport=5000
-      
+
     - name: Check JMeter Results
       run: |
         echo "=== JMeter Summary ==="
-        # 提取摘要信息
         tail -20 jmeter/result.jtl
         
-        # 检查是否有错误（s="false" 表示失败）
+        # 简单检查是否有失败的请求
         if grep -q "s=\"false\"" jmeter/result.jtl; then
           echo "✗ JMeter test had errors"
           exit 1
@@ -124,24 +119,23 @@ jobs:
           echo "✓ JMeter test passed with 0 errors"
         fi
 
-    # 8. 【新增】复制 JMeter 报告到 allure-report 目录以便一起部署到 Pages
+    # 8. 合并报告
     - name: Copy JMeter Report to Allure Report Dir
       run: |
-        # 创建 jmeter 子目录在 allure-report 中
         mkdir -p allure-report/jmeter
-        # 复制整个报告目录
         cp -r jmeter/report_html/* allure-report/jmeter/
         echo "JMeter report copied to allure-report/jmeter/"
 
-    # 9. 生成 Allure 报告（保持不变）
+    # 9. 生成 Allure 报告
     - name: Generate Allure Report
       run: |
         curl -L -o allure.zip https://github.com/allure-framework/allure2/releases/download/2.36.0/allure-2.36.0.zip
         unzip allure.zip -d allure
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
-        $ALLURE_BIN generate allure-results -o allure-report --clean
+        # 如果是子路径，记得加 --base-url
+        $ALLURE_BIN generate allure-results -o allure-report --clean --base-url /blog_test
 
-    # 10. 部署到 GitHub Pages（现在包含 Allure 和 JMeter 报告）
+    # 10. 部署到 GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
@@ -150,7 +144,7 @@ jobs:
         destination_dir: allure-report
         keep_files: true
 
-    # 11. 上传测试报告 Artifacts
+    # 11. 上传 Artifacts
     - name: Upload test report
       uses: actions/upload-artifact@v4
       if: always()
@@ -160,7 +154,6 @@ jobs:
           reports/report.html
           allure-report/
 
-    # 12. 【新增】单独上传 JMeter 报告作为 artifact
     - name: Upload JMeter Report
       uses: actions/upload-artifact@v4
       if: always()
