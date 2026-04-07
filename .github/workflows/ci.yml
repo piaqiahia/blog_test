@@ -51,6 +51,8 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install ".[test]"
+        # 安装 gunicorn 用于生产级服务器
+        pip install gunicorn
 
     - name: Wait for MySQL
       run: |
@@ -70,14 +72,23 @@ jobs:
         mysql -h 127.0.0.1 -P 3306 -u root -p1511054331 h3blog < sql/02-data-dump.sql
         echo "Database imported successfully!"
 
-    - name: Start Flask App in Background
+    - name: Start Flask App with Gunicorn
       run: |
         mkdir -p logs
         export FLASK_APP=app
-        flask run --host=0.0.0.0 --port=5000 &
+        # 使用 Gunicorn 启动 Flask（4个worker进程）
+        gunicorn -w 4 -b 0.0.0.0:5000 app:app > logs/flask.log 2>&1 &
+        
         echo "Waiting for Flask to start..."
-        sleep 15
-        curl http://127.0.0.1:5000 || echo "Flask might not be up yet"
+        sleep 20
+        
+        # 检查服务是否启动
+        if curl -s http://127.0.0.1:5000 2>&1 | grep -q "200"; then
+          echo "✓ Flask is running with Gunicorn!"
+        else
+          echo "⚠️ Flask might not be ready. Checking logs..."
+          tail -30 logs/flask.log
+        fi
 
     # 6. 运行单元测试
     - name: Run tests
@@ -110,7 +121,7 @@ jobs:
         rm -rf jmeter/report_html
         rm -f jmeter/result.jtl
 
-        # 然后运行 JMeter
+        # 然后运行 JMeter（50线程，如果还有问题可以改为15）
         ./apache-jmeter-5.6.3/bin/jmeter -n -t jmeter/blog_test1.jmx \
           -l jmeter/result.jtl \
           -e -o jmeter/report_html \
