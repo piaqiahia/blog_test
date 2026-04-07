@@ -1,0 +1,99 @@
+{% macro macro_menu(menus) %}
+<!--菜单-->
+{% for menu in menus %}
+	{% if not menu.parent_id %}
+		<li>
+			<a class="{{menu.target}}" href="{{menu.url}}" data-refresh="false">
+                <i class="{{menu.icon}}"></i>
+                <span class="nav-label">{{menu.name}}</span>
+                {% if menu.children | length > 0 %}
+                <span class="fa arrow"></span>
+                {% endif %}
+            </a>
+			<ul class="nav nav-second-level collapse">
+                {% for m1 in menu.children %}
+                {% if m1.children | length > 0  and m1.menu_type != 'F' %}
+                <li>
+                    <a {% if m1.menu_type == 'C' %} class="{{m1.target}}" {% endif %} href="{{m1.url}}" data-refresh="false">
+                        <i class="{{m1.icon}}"></i>
+                        <span class="nav-label">{{m1.name}}</span>
+                        {% if m1.menu_type == 'M'%}
+                        <span class="fa arrow"></span>
+                        {% endif %}
+                    </a>
+                    <ul class="nav nav-third-level">
+                        {% for m2 in m1.children %}
+                        {% if m2.menu_type != 'F' %}
+                        <li>
+                            <a class="{{m2.target}}" href="{{m2.url}}" data-refresh="{{'true' if m2.is_refresh == 0 else 'false'}}">
+                                <i class="{{m2.icon}}"></i>
+                                <span class="nav-label">{{m2.name}}</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                    </ul>  
+                </li>
+                {% else%}
+                <li>
+                    <a class="{{m1.target}}" href="{{m1.url}}" data-refresh="{{'true' if m1.is_refresh == 0 else 'false'}}">{{m1.name}}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+		</li>
+	{% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro macro_menu_topnav(menus) %}
+<!--菜单-->
+{% for menu in menus %}
+<div class="tab-pane fade height-full" id="menu_{{menu.id}}">
+    <ul class="nav">
+        {% for cmenu in menu.children %}
+        {% if cmenu.children | length == 0 %}
+        <li>
+            <a class="menu-content {{cmenu.target if cmenu.target != '' else 'menuItem'}}" href="{{cmenu.url}}" data-refresh="{{'true' if cmenu.is_refresh == 0 else 'false'}}">
+                <i class="{{cmenu.icon}} fa-fw"></i> <span class="nav-label">{{cmenu.name}}</span>
+            </a>
+        </li>
+        {% else %}
+        <li>
+            <a class="menu-content" href="#">
+                <i class="{{cmenu.icon}} fa-fw"></i>
+                <span class="nav-label">{{cmenu.name}}</span>
+                <span class="fa arrow"></span>
+            </a>
+            <ul class="nav nav-second-level collapse">
+                {% for emenu in cmenu.children %}
+                <li>
+                    {% if emenu.children | length == 0 %}
+                    <a href="{{emenu.url}}" class="{{emenu.target if emenu.target != '' else 'menuItem'}}" data-refresh="{{'true' if emenu.is_refresh == 0 else 'false'}}">
+                        <i class="{{emenu.icon}} fa-fw"></i> 
+                        {{emenu.name}}
+                    </a>
+                    {% else %}
+                    <a href="#">
+                        <i class="{{emenu.icon}} fa-fw"></i> 
+                        {{emenu.name}}
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-third-level collapse">
+                        {% for fmenu in emenu.children %}
+                        <li><a class="{{fmenu.target if fmenu.target != '' else 'menuItem'}}" href="{{fmenu.url}}" data-refresh="{{'true' if fmenu.is_refresh == 0 else 'false'}}">{{fmenu.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        
+        {% endif %}
+        {% endfor %}
+
+    </ul>
+</div>	
+{% endfor %}
+{% endmacro %}

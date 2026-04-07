@@ -1,0 +1,55 @@
+{% extends 'tend/common/base.html' %}
+{% import "tend/macros/_patination.html" as page_macros %}
+{% import "tend/macros/_flash.html" as flash_macros %}
+{% block title %} {{category.seo_title or category.title}} {% endblock %}
+{% block keywords %} {{category.seo_keywords or category.title}} {% endblock %}
+{% block description %} {{category.seo_description or ''}} {% endblock %}
+{% block css %}
+{{super()}}
+<style>
+
+</style>
+{% endblock %}
+{% block main %}
+<section class="jumbotron text-center"
+    style="background-image: url({{url_for('main.static',filename='img/banner.jpg')}});background-repeat: no-repeat;background-size: cover; ">
+    <div class="container">
+        <h1 class="jumbotron-heading">Seo-Tool —— Seo辅助工具</h1>
+        <p class="lead text-muted">Seo-Tool
+            支持关键词排名批量查询，支持网站收录查询，支持站点状态检测，支持定时任务，支持外链发送，支持Ai文章批量生成等功能，根据用户需求会不断扩充功能模块；该软件长期维护</p>
+        <p>
+            {% set appversion = app_version('seo-tool') %}
+            <a href="{{appversion.url}}" class="btn btn-primary my-2" target="_blank">免费下载[V{{appversion.version}}]</a>
+        </p>
+    </div>
+</section>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+
+        <div class="row">
+            {% for a in category.articles() %}
+            <div class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <img class="card-img-top"
+                        data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail"
+                        alt="{{a.title}}" src="{{a.thumbnail_img()}}" data-holder-rendered="true"
+                        style="height: 225px; width: 100%; display: block;">
+                    <div class="card-body">
+                        <p class="card-text"><a href="{{url_for('main.article',name=a.name)}}">{{a.title}}</a></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+
+                            </div>
+                            <small class="text-muted">{{a.publish_time|pretty_date}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

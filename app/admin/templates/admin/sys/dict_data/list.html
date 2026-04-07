@@ -1,0 +1,160 @@
+{% extends 'admin/common/base.html' %}
+{% block css %}
+{{super()}}
+<link href="{{url_for('admin.static',filename='ajax/libs/select2/select2.min.css')}}" rel="stylesheet"/>
+<link href="{{url_for('admin.static',filename='ajax/libs/select2/select2-bootstrap.css')}}" rel="stylesheet"/>
+{% endblock %}
+{% block body %}
+<body class="gray-bg">
+    <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="data-form">
+					<div class="select-list">
+						<ul>
+						    <li>
+								字典名称：<select id="dict_type" name="dict_type" class="form-control">
+                                    {% for dt in dict_types %}
+                                    <option value="{{dt.dict_type}}" {%if dt.id == dict_type_id %}selected="selected"{%endif%}>{{dt.name}}</option>
+                                    {% endfor %}
+								</select>
+							</li>
+							<li>
+								字典标签：<input type="text" name="dictLabel"/>
+							</li>
+							<li>
+								数据状态：<select name="status">
+									      <option value="">所有</option>
+									      <option value="0">正常</option>
+									      <option value="1">停用</option>
+								      </select>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							    <a class="btn btn-warning btn-rounded btn-sm" onclick="resetPre()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	       <div class="btn-group-sm" id="toolbar" role="group">
+	            <a class="btn btn-success" onclick="add()">
+	                <i class="fa fa-plus"></i> 新增
+	            </a>
+	            <a class="btn btn-primary single disabled" onclick="$.operate.edit()">
+		            <i class="fa fa-edit"></i> 修改
+		        </a>
+				<a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()">
+		            <i class="fa fa-remove"></i> 删除
+		        </a>
+		        <a class="btn btn-warning" onclick="$.table.exportExcel()">
+		            <i class="fa fa-download"></i> 导出
+		        </a>
+		        <a class="btn btn-danger" onclick="closeItem()">
+		            <i class="fa fa-reply-all"></i> 关闭
+		        </a>
+	        </div>
+	        
+	        <div class="col-sm-12 select-table table-striped">
+			    <table id="bootstrap-table"></table>
+			</div>
+		</div>
+	</div>
+</body>
+{% endblock %}
+{% block js %}
+{{ super() }}
+<script src="{{url_for('admin.static',filename='ajax/libs/select2/select2.min.js')}}"></script>
+<script>
+    var ctx = '';
+    var editFlag = "";
+    var removeFlag = "";
+    var prefix = ctx + "system/dict/data";
+
+    $(function() {
+        var options = {
+            url: "{{url_for('admin.sys.dict_data.list')}}",
+            createUrl: "{{url_for('admin.sys.dict_data.add')}}?dict_type={id}",
+            updateUrl: "{{url_for('admin.sys.dict_data.edit')}}?id={id}",
+            removeUrl: "{{url_for('admin.sys.dict_data.remove')}}?id={id}",
+            exportUrl: prefix + "/export",
+            queryParams: queryParams,
+            sortName: "dictSort",
+            sortOrder: "asc",
+            modalName: "数据",
+            columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: '字典编码'
+                },
+                {
+                    field: 'label',
+                    title: '字典标签',
+                    formatter: function(value, row, index) {
+                        var list_class = $.common.equals("default", row.list_class) || $.common.isEmpty(row.list_class) ? "" : "badge badge-" + row.list_class;
+                        return $.common.sprintf("<span class='%s'>%s</span>", list_class, value);
+                    }
+                },
+                {
+                    field: 'value',
+                    title: '字典键值'
+                },
+                {
+                    field: 'sort',
+                    title: '字典排序'
+                },
+                {
+                    field: 'status',
+                    title: '状态',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        if(value == 0 || value == '0') {
+                            return '正常'
+                        }
+                        return '停用'
+                    }
+                },
+                {
+                    field: 'remark',
+                    title: '备注'
+                },
+                {
+                    field: 'createTime',
+                    title: '创建时间',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+        $.table.init(options);
+    });
+    
+    function queryParams(params) {
+        var search = $.table.queryParams(params);
+        search.dict_type = $("#dict_type").val();
+        return search;
+    }
+    
+    /*字典数据-新增字典*/
+    function add() {
+        var dict_type = $("#dict_type option:selected").val();
+        $.operate.add(dict_type);
+    }
+    
+    function resetPre() {
+        $.form.reset();
+        $("#dict_type").val($("#dict_type").val()).trigger("change");
+    }
+</script>
+{% endblock %}

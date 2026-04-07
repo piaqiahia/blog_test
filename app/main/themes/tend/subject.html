@@ -1,0 +1,31 @@
+{% extends 'tend/common/base.html' %}
+{% import "tend/macros/_patination.html" as page_macros %}
+{% import "tend/macros/_flash.html" as flash_macros %}
+{% block main %}
+<div class="container">
+    <div class="row subject-card-list">
+        {% for c in categorys %}
+        <div class="col-6 col-sm-4 col-lg-3 col-xl-2 px-lg-2 mb-3">
+            <div class="card subject-card">
+                <a href="{{url_for('.category', c=c.name)}}">
+                    <img src="{{c.img or '/static/img/thumbnail.jpg'}}" class="card-img-top" alt="{{c.title or ''}}" style="height: 150px;">
+                    <div class="card-body" style="height: 7.2rem;">
+                        <div class="subject-card-title text-center">
+                            <h5 class="card-title">{{c.title|title or ''}}</h5>
+                            <small class="subject-article-count">
+                                <span class="text-secondary">文章数量：{{c.articles_count()}} 篇</span>
+                            </small>
+                        </div>
+                        <p class="card-text subject-desc">
+                            {{c.remark or '' |truncate(24,killwords=True,leeway=0) }}
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

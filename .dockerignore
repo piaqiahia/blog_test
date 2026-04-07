@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+.gitlab-ci.yml
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-selfcheck.json
+*.egg-info/
+
+# 测试和日志
+tests/
+logs/
+*.log
+.pytest_cache/
+allure-results/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 其他
+.env
+.env.*
+*.md
+README.md

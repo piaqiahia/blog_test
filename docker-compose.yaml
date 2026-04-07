@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: h3blog_web
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_CONFIG=development
+      - DATABASE_URL=mysql+pymysql://root:1511054331@db/h3blog?charset=utf8mb4
+      - FLASK_APP=app:create_app()
+    volumes:
+      - .:/app
+      - ./logs:/app/logs
+    command: >
+      sh -c "
+        echo '等待数据库完全就绪...';
+        for i in {1..90}; do
+          if python -c 'import pymysql; pymysql.connect(host=\"db\", user=\"root\", password=\"1511054331\", database=\"h3blog\", connect_timeout=2)'; then
+            echo '数据库连接成功，启动 Flask 应用';
+            flask run --host=0.0.0.0;
+            exit 0;
+          fi;
+          echo \"数据库未就绪，等待 10 秒... (\$i/90)\";
+          sleep 10;
+        done;
+        echo '数据库启动超时，请检查日志';
+        exit 1;
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: h3blog_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 1511054331
+      MYSQL_DATABASE: h3blog
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p1511054331"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: always
+
+  # 测试服务
+  test:
+    build: .
+    command: sh -c "python h3blog_test/run_test.py"
+    volumes:
+      - .:/app
+      - ./h3blog_test/reports:/app/h3blog_test/reports
+      - ./h3blog_test/allure-results:/app/h3blog_test/allure-results
+      - ./h3blog_test/allure-report:/app/h3blog_test/allure-report
+    environment:
+      - FLASK_ENV=testing
+      - DATABASE_URL=mysql+pymysql://root:1511054331@db:3306/h3blog?charset=utf8mb4
+      - REDIS_URL=redis://redis:6379/1
+      - PYTHONPATH=/app
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+    networks:
+      - app-network
+    tty: true
+    stdin_open: true
+
+  # JMeter 压测服务（方案二：挂载卷到宿主机）
+  jmeter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: h3blog_jmeter
+    command: [
+      "sh", "-c",
+      "echo '=== 等待 Web 服务启动 ===' && \
+       sleep 30 && \
+       echo '=== 清理旧报告 ===' && \
+       rm -rf /app/jmeter/report_html && \
+       rm -f /app/jmeter/result.jtl && \
+       echo '=== 开始执行 JMeter 压测 ===' && \
+       /opt/jmeter/bin/jmeter -n -t /app/jmeter/blog_test1.jmx \
+         -l /app/jmeter/result.jtl \
+         -e -o /app/jmeter/report_html && \
+       echo '=== 压测完成 ===' && \
+       if [ -f /app/jmeter/report_html/index.html ]; then \
+         echo '✓ 报告生成成功'; \
+       else \
+         echo '✗ 报告生成失败'; exit 1; \
+       fi && \
+       echo '=== 容器已就绪 ===' && \
+       echo '手动启动服务器: docker exec h3blog_jmeter sh -c \"cd /app/jmeter/report_html && python3 -m http.server 8080\"' && \
+       tail -f /dev/null"
+    ]
+    volumes:
+      - ./jmeter:/app/jmeter
+    networks:
+      - app-network
+    depends_on:
+      web:
+        condition: service_started
+      db:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    ports:
+      - "8080:8080"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

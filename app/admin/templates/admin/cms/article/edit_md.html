@@ -1,0 +1,492 @@
+{% extends 'admin/common/base.html' %}
+{% block css %}
+{{super()}}
+<link href="{{url_for('admin.static',filename='ajax/libs/jasny/jasny-bootstrap.min.css')}}?v=3.1.3" rel="stylesheet" />
+<link href="{{url_for('admin.static',filename='ajax/libs/datapicker/bootstrap-datetimepicker.min.css')}}"
+	rel="stylesheet" />
+<link href="{{url_for('admin.static',filename='ajax/libs/bootstrap-tagsinput/bootstrap-tagsinput.css')}}"
+	rel="stylesheet" />
+<link href="{{url_for('admin.static',filename='editor_md/editormd.min.css')}}" rel="stylesheet" />
+<style>
+	.editormd-fullscreen {
+		z-index: 1089;
+	}
+</style>
+{% endblock %}
+{% block body %}
+
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form">
+			<input type="hidden" name="id" value="{{d.id or ''}}">
+			<div class="row">
+				<div class="col-md-9">
+					<div class="form-group">
+						<label class="col-sm-1 control-label">标题：</label>
+						<div class="col-sm-11">
+							<input class="form-control" type="text" name="title" id="title" value="{{d.title or ''}}"
+								required>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-1 control-label ">内容：</label>
+						<div class="col-sm-11">
+							<div class="row center-block" style="margin: 0 0 5px 0;">
+								<div class="col-md-10" style="margin: 0px; padding: 0px;">
+									网址:<span id="baseURL">http://www.h3blog.com/</span>article/<input name="name"
+										style="width: auto;border-left: 0;border-right: 0;border-top: 0;"
+										value="{{d.name or ''}}">
+								</div>
+								<div class="col-md-2 text-right" style="margin: 0px; padding: 0px;">
+									<a href="{{url_for('admin.cms.article.edit', id=request.values.get('id') ,editor='tinymce')}}">切换TinyMCE编辑器</a>
+								</div>
+							</div>
+							<input type="hidden" name="editor" value="markdown">
+							<div id="write-editor">
+								<textarea name="content">{{d.content or ''}}</textarea>
+							</div>
+
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-1 control-label ">概述：</label>
+						<div class="col-sm-11">
+							<textarea class="form-control" name="summary" id="summary" rows="6"
+								maxlength="300">{{d.summary or ''}}</textarea>
+						</div>
+					</div>
+					<div class="panel-group  col-md-offset-1" id="accordion" role="tablist" aria-multiselectable="true">
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="headingOne">
+								<h4 class="panel-title">
+									<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+										aria-expanded="true" aria-controls="collapseOne">
+										权限内容
+									</a>
+								</h4>
+							</div>
+							<div id="collapseOne" class="panel-collapse collapse" role="tabpanel"
+								aria-labelledby="headingOne">
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="col-sm-1 control-label ">角色：</label>
+										<div class="col-sm-11">
+											<select class="form-control" name="h_role" id="h_role">
+												<option value="0" {{'selected' if d.h_role==0 else '' }}>无</option>
+												<!-- <option value="1" {{'selected' if d.h_role == 1 else ''}}>管理员</option> -->
+												<option value="2" {{'selected' if d.h_role==2 else '' }}>会员</option>
+												<option value="3" {{'selected' if d.h_role==3 else '' }}>vip</option>
+												<option value="4" {{'selected' if d.h_role==4 else '' }}>付费</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group" id="price_div">
+										<label class="col-sm-1 control-label ">价格：</label>
+										<div class="col-sm-11">
+											<div class="input-group m-b">
+												<input class="form-control" type="number" name="price"
+													value="{{d.price or 0.00}}">
+												<span class="input-group-addon">￥</span>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-1 control-label ">内容：</label>
+										<div class="col-sm-11">
+											<textarea class="form-control tinymce-editor" name="h_content" id="h_content"
+												rows="6">{{d.h_content or ''}}</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">状态：</h3>
+						</div>
+						<div class="panel-body">
+							<select id="state" name="state" class="form-control m-b">
+								{% for dd in get_dict_data('cms_article_state')%}
+								<option value="{{dd.value}}" {{'selected' if dd.value==d.state | string }}>{{dd.label}}
+								</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">栏目：</h3>
+						</div>
+						<div class="panel-body">
+							<input type="hidden" name="category_id" id="category_id" value="{{d.category_id}}">
+							<div class="input-group">
+								<input class="form-control" type="text" onclick="selectCategoryTree()"
+									id="category_name" readonly="true" required value="{{d.category.title}}">
+								<span class="input-group-addon" onclick="selectCategoryTree()"><i
+										class="fa fa-search"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">标签</h3>
+						</div>
+						<div class="panel-body">
+							<input class="form-control" type="text" data-role="tagsinput" name="tagsinput" id="tags"
+								value="{{d.tag_names}}">
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">缩略图：</h3>
+						</div>
+						<div class="panel-body">
+							<div class="thumbnail">
+								<input id="thumbnail" name="thumbnail" type="hidden" value="{{d.thumbnail or '/static/img/thumbnail.jpg'}}">
+								<img id="thumbnail-img" src="{{d.thumbnail or '/static/img/thumbnail.jpg'}}"
+									class="img-rounded" style="max-height: 300px;">
+								<div class="caption">
+									<button id="thumbnail-upload-btn" type="button"
+										class="btn btn-outline-secondary btn-sm">选择图片</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">作者</h3>
+						</div>
+						<div class="panel-body">
+							<input class="form-control" type="text" name="author" id="author"
+								value="{{d.author or current_user.name}}">
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">访问统计</h3>
+						</div>
+						<div class="panel-body">
+							<input class="form-control" type="number" name="vc" id="vc" value="{{d.vc}}">
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">发布时间：</h3>
+						</div>
+						<div class="panel-body">
+							<div class="input-group date">
+								<input name="publish_time" class="form-control dtp" placeholder="yyyy-mm-dd HH:ii:ss"
+									type="text" value="{{d.publish_time or now().strftime('%Y-%m-%d %H:%M:%S')}}"
+									required>
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-offset-5 col-sm-10">
+					<button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i
+							class="fa fa-check"></i>保
+						存</button>&nbsp;
+					<button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i
+							class="fa fa-reply-all"></i>关 闭
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</body>
+{% endblock %}
+{% block js %}
+{{ super() }}
+<script src="{{url_for('admin.static',filename='ajax/libs/jasny/jasny-bootstrap.min.js')}}?v=3.1.3"></script>
+<script src="{{url_for('admin.static',filename='ajax/libs/tinymce/js/tinymce/tinymce.min.js')}}"></script>
+<script src="{{url_for('admin.static',filename='js/cms_tinymce.js')}}"></script>
+<script src="{{url_for('admin.static',filename='ajax/libs/datapicker/bootstrap-datetimepicker.min.js')}}"></script>
+<script src="{{url_for('admin.static',filename='ajax/libs/bootstrap-tagsinput/bootstrap-tagsinput.min.js')}}"></script>
+<script src="{{url_for('admin.static',filename='ajax/libs/typeahead/bootstrap-typeahead.js')}}"></script>
+<script src="{{url_for('admin.static',filename='editor_md/editormd.min.js')}}"></script>
+<script type="text/javascript">
+
+	var tags_source = {{ get_tags(rtype = 'name') | tojson | safe}};
+	$('#tags').tagsinput({
+		typeahead: {
+			source: tags_source,
+			afterSelect: function () {
+				this.$element[0].value = '';
+			}
+		},
+		freeInput: true
+	});
+
+	$(function () {
+		function h_role_change(role) {
+			if (role == '4') {
+				$('#price_div').show()
+			} else {
+				$('#price_div').hide()
+			}
+		}
+		h_role_change($('#h_role').val());
+
+		$("#h_role").change(function () {
+			let role = $(this).val()
+			h_role_change(role)
+		});
+	});
+
+
+
+	$(".dtp").datetimepicker({
+		format: 'yyyy-mm-dd HH:ii:ss',
+		maxView: "2",
+		todayBtn: true,
+		autoclose: true,
+	})
+
+	$("#form").validate({
+
+	});
+
+	function submitHandler() {
+		if ($.validate.form()) {
+			tinyMCE.triggerSave();
+			$.operate.save("{{url_for('admin.cms.article.edit')}}", new FormData(document.getElementById('form')), (result) => {
+				//$.modal.closeTab();
+				if (result.code == web_status.SUCCESS) {
+					top.layer.confirm('保存成功', {
+						icon: 3,
+						title: "系统提示",
+						btn: ['关闭']
+					}, function (index) {
+						$.modal.close(index);
+						try {
+							var topWindow = $(window.parent.document);
+							var currentId = $('.page-tabs-content', topWindow).find('.active').attr('data-panel');
+							var $contentWindow = $('.RuoYi_iframe[data-id="' + currentId + '"]', topWindow)[0].contentWindow;
+							$.modal.close();
+							$contentWindow.$.modal.msgSuccess(result.msg);
+							$contentWindow.$(".layui-layer-padding").removeAttr("style");
+							if ($contentWindow.table.options.type == table_type.bootstrapTable) {
+								$contentWindow.$.table.refresh();
+							} else if ($contentWindow.table.options.type == table_type.bootstrapTreeTable) {
+								$contentWindow.$.treeTable.refresh();
+							}
+						} catch (e) { }
+						$.modal.closeTab();
+					});
+				}
+			});
+		}
+	}
+
+	function selectCategoryTree() {
+		var treeId = $("#category_id").val();
+		var menuId = treeId > 0 ? treeId : 1;
+		var url = "{{url_for('admin.cms.category.select_category_tree')}}?id=" + menuId;
+		var options = {
+			title: '选择栏目',
+			width: "380",
+			url: url,
+			callBack: do_select
+		};
+		$.modal.openOptions(options);
+	}
+
+	function do_select(index, layero) {
+		var body = $.modal.getChildFrame(index);
+		$("#category_id").val(body.find('#treeId').val());
+		$("#category_name").val(body.find('#treeName').val());
+		$.modal.close(index);
+	}
+
+	//上传图片
+	$('#thumbnail-upload-btn').click(function (e) {
+		imagehosting('thumbnail-img');
+	});
+
+	//调用图床
+	var imagehosting_for = "thumbnail-img";
+	var tinymce_select_img_callback = null;
+	function imagehosting(flag) {
+		imagehosting_for = flag;
+		layer.open({
+			type: 2,
+			title: '图片管理',
+			shade: 0.8,
+			maxmin: true,
+			shadeClose: true,
+			area: ['80%', '90%'],
+			content: '{{url_for("admin.cms.material.image_hosting")}}' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+		});
+	}
+	//image_hosting.html图床界面调用该函数
+	function imagehosting_callback(obj) {
+		//缩略图
+		if (imagehosting_for === 'thumbnail-img') {
+			$('#thumbnail-img').attr('src', obj.img_url);
+			$('#thumbnail').val(obj.img_url);
+		}
+		//编辑器 editor.md
+		if (imagehosting_for === 'editor-img') {
+			myEditor.settings.imagehosting_callback(obj)
+		}
+
+	}
+
+	var myEditor;
+	$(function () {
+		myEditor = editormd("write-editor", {
+			// width: '100%',
+			height: '450px',
+			syncScrolling: "single",
+			path: "{{url_for('admin.static',filename='editor_md/lib/')}}",
+			emoji: true,//emoji表情，默认关闭
+			watch: true, // 关闭实时预览
+			taskList: true,
+			tocm: true, // Using [TOCM]
+			tex: true,// 开启科学公式TeX语言支持，默认关闭
+			//flowChart: true,//开启流程图支持，默认关闭
+			//sequenceDiagram: true,//开启时序/序列图支持，默认关闭,
+			//启动本地图片上传功能
+			imageUpload: true,
+			// imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+			// imageUploadURL: "",
+			toolbarIcons: function () {
+				// Or return editormd.toolbarModes[name]; // full, simple, mini
+				// Using "||" set icons align right.
+				// ["undo", "redo", "|", "bold", "del", "italic", "quote", "|", "h1", "h2", "h3", "h4",
+				//     "h5", "h6", "|", "list-ul", "list-ol", "hr", "|", "link", "reference-link", "image",
+				//     "code", "code-block", "table", "datetime", "html-entities", "goto-line", "search", "||",
+				//     "fullscreen", "watch", "preview", "info", "|", "publish"]
+				return ["bold", "del", "italic", "quote", "|", "h2", "h3", "h4",
+					"|", "list-ul", "list-ol", "hr", "|", "link", "reference-link", "image",
+					"code", "code-block", "table", "|", "import_url", "watch", "fullscreen"]
+			},
+			toolbarIconTexts: {
+				import_url: '导入'
+			},
+			toolbarHandlers: {
+				/**
+				* @param {Object}      cm         CodeMirror对象
+				* @param {Object}      icon       图标按钮jQuery元素对象
+				* @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
+				* @param {String}      selection  编辑器选中的文本
+				*/
+				import_url: function (cm, icon, cursor, selection) {
+					//var cursor    = cm.getCursor();     //获取当前光标对象，同cursor参数
+					//var selection = cm.getSelection();  //获取当前选中的文本，同selection参数
+
+					// 替换选中文本，如果没有选中文本，则直接插入
+					// cm.replaceSelection(selection);
+
+					// 如果当前没有选中的文本，将光标移到要输入的位置
+					if (selection === "") {
+						cm.setCursor(cursor.line, cursor.ch + 1);
+					}
+
+					// this == 当前editormd实例
+					// console.log("testIcon =>", this, cm, icon, cursor, selection);
+					console.log(this)
+
+					let dialogName = 'import_url_name', dialog;
+					let editor = $('#write-editor')
+					if (editor.find("." + dialogName).length < 1) {
+						var dialogContent = '<div class="editormd-form">';
+						dialogContent += '<label>文章地址</label>'
+						dialogContent += '<input type="text" name="url" placeholder="文章地址与内容二选一">'
+						dialogContent += '<br/>'
+						dialogContent += '<label>文章内容</label>'
+						dialogContent += '<input type="text" name="html" placeholder="文章内容HTML">'
+						dialogContent += '<br/>'
+						dialogContent += '<label>导入图片</label>'
+						dialogContent += '<a href="javascript:;"><label for="editormd-import-dialog-radio" title="是">'
+						dialogContent += '<input type="radio" name="download" id="yes" value="1">是&nbsp;'
+						dialogContent += '</label></a>'
+						dialogContent += '<a href="javascript:;"><label for="editormd-import-dialog-radio" title="否">'
+						dialogContent += '<input type="radio" name="download" id="no" value="0" checked="checked">否&nbsp;'
+						dialogContent += '</label></a>'
+						dialogContent += '</div>';
+
+						dialog = this.createDialog({
+							title: '导入文章',
+							width: (this.settings.imageUpload) ? 465 : 380,
+							height: 254,
+							name: dialogName,
+							content: dialogContent,
+							mask: this.settings.dialogShowMask,
+							drag: this.settings.dialogDraggable,
+							lockScreen: this.settings.dialogLockScreen,
+							maskStyle: {
+								opacity: this.settings.dialogMaskOpacity,
+								backgroundColor: this.settings.dialogMaskBgColor
+							},
+							buttons: {
+								enter: [this.lang.buttons.enter, function () {
+									var url = this.find("[name='url']").val();
+									var html = this.find("[name='html']").val();
+									var download = this.find("[name=\"download\"]:checked").val();
+									console.log(url, download)
+
+									if (url === "" && html.length == 0) {
+										alert('文章地址不能为空');
+										return false;
+									}
+									let that = this;
+									$.post('{{url_for("admin.cms.article.import_article")}}', { url: url, html: html, 'csrf_token': '{{ csrf_token() }}', download_img: download }, (resp) => {
+										//console.log(resp)
+										//cm.replaceSelection(resp);
+										cm.setValue(resp)
+										that.find("[name='url']").val('');
+										this.hide().lockScreen(false).hideMask();
+									})
+
+									// this.hide().lockScreen(false).hideMask();
+
+									return false;
+								}],
+
+								cancel: [this.lang.buttons.cancel, function () {
+									this.hide().lockScreen(false).hideMask();
+
+									return false;
+								}]
+							}
+						});
+					}
+
+					dialog = editor.find("." + dialogName);
+					dialog.find("[type=\"text\"]").val("");
+
+					this.dialogShowMask(dialog);
+					this.dialogLockScreen();
+					dialog.show();
+				},
+			},
+
+			lang: {
+				toolbar: {
+					import_url: '导入',
+				}
+			},
+			imagehosting: function () {
+				imagehosting('editor-img');
+			},
+			imagehosting_callback: function (obj) {
+
+			}
+		});
+	})
+
+</script>
+{% endblock %}
