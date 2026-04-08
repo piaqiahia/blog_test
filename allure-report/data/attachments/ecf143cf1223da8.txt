@@ -1,0 +1,3 @@
+当前测试角色：管理员
+使用 Fixture: admin_api
+Session Cookie: {'session': '.eJwljktqBDEMBe_idQiSLf_mMo0lPZEhZALdM6uQu8eQbb0HVT_piBPXR7o9zxfe0nH3dEtG2pejWRmVJCxUsrdVqboQ2-oSpSnPvsxHoM4ajtHZMprOvRExkcCHhXWdkL4UtfEgnWaTBmN_gxTd1NCze9YaEKl9YKUd8rpw_tcs_7o_3nlDu844nt-feGysvspoeRpZllw5tqaVbQBpy8Ru3lAG0u8fmXpDhg.adZPSw.eC2gYxvivOn77Z1htw7_wyyYr0w'}

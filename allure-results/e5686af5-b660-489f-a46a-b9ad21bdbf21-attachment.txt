@@ -1,3 +1,0 @@
-当前测试角色：普通用户
-使用 Fixture: normal_api
-Session Cookie: {'session': 'eyJjc3JmX3Rva2VuIjoiNzY3MzE1ZjcyYTk0ZDAxNmMyODkwY2U0NmEwNTU3YmRjYmU4ZWNkZCJ9.adVBvA.ZbCJRgbgvdZIPq3Ex1ueINIkGkc'}

@@ -1,6 +1,0 @@
-flask
-pymysql
-pytest
-pytest-html
-allure-pytest
-requests

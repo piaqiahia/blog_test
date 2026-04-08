@@ -1,3 +1,0 @@
-POST /admin/cms/article/edit
-Status: 200
-Content-Type: text/html; charset=utf-8

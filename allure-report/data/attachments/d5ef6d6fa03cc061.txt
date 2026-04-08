@@ -1,0 +1,33 @@
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":10,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-04-08 12:51:26","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":27,"is_crawl":0,"name":"name_1775652685581","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-04-08 12:51:25","remark":"","sn":1775652686,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u5c0f\\u6279\\u91cf\\u5220\\u96643_1_1775652685581","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-04-08 12:51:26","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":11,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-04-08 12:51:26","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":28,"is_crawl":0,"name":"name_1775652685614","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-04-08 12:51:25","remark":"","sn":1775652686,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u5c0f\\u6279\\u91cf\\u5220\\u96643_1_1775652685614","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-04-08 12:51:26","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[{"author":"\\u7ba1\\u7406\\u5458","category":{"articles_count":12,"content":null,"create_by":null,"ctime":"2025-10-26 22:56:58","deleted":0,"desp":null,"h_role":0,"icon":"fa fa-address-book","id":1,"img":null,"name":"python","order_num":1,"org_id":null,"parent_id":null,"price":"0.00","remark":"","seo_description":null,"seo_keywords":null,"seo_title":null,"title":"Python","tpl_list":"subject_list.html","tpl_mold":"list","tpl_page":"subject_detail.html","update_by":"","utime":"2025-10-26 22:56:58","visible":1},"category_id":1,"comment_num":0,"content":"\\u6d4b\\u8bd5\\u5185\\u5bb9","content_html":"<p>\\u6d4b\\u8bd5\\u5185\\u5bb9</p>","create_by":1,"ctime":"2026-04-08 12:51:26","deleted":0,"editor":"markdown","h_content":"<p>HTML</p>","h_role":0,"id":29,"is_crawl":0,"name":"name_1775652685648","org_id":1,"origin_author":"","origin_url":"","price":"0.00","publish_time":"2026-04-08 12:51:25","remark":"","sn":1775652686,"state":1,"summary":"\\u6458\\u8981","thumbnail":"/static/img/thumb.jpg","title":"Pos_\\u5c0f\\u6279\\u91cf\\u5220\\u96643_1_1775652685648","toc":"<div class=\\"toc\\">\\n<ul></ul>\\n</div>\\n","update_by":"","utime":"2026-04-08 12:51:26","vc":0}],"total":1}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+>>> 请求 URL: http://127.0.0.1:5000/admin/cms/article/list
+>>> 响应状态码: 200
+>>> 原始响应内容（前300字符）:
+'{"code":0,"msg":"","rows":[],"total":0}\n'
+>>> Content-Type: application/json
+
+[Teardown] 正在清理 3篇测试文章
+[Teardown]清理完成
