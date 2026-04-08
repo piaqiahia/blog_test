@@ -188,112 +188,142 @@ jobs:
         ALLURE_BIN=$(pwd)/allure/allure-2.36.0/bin/allure
         $ALLURE_BIN generate allure-results -o allure-report --clean
 
-    # 10. 准备 JMeter 报告
+    # 10. 准备 JMeter 报告 (保持你的修复逻辑)
     - name: Prepare Standalone JMeter Report for Deploy
       run: |
-        # 1. 创建目录并复制文件
         mkdir -p jmeter-report
         cp -r jmeter/report_html/* jmeter-report/
 
-        # 2. 【关键修复 A】处理 _dashboard
-        # 如果存在 _dashboard，重命名为 dashboard
+        # 处理 _dashboard -> dashboard (如果存在)
         if [ -d "jmeter-report/_dashboard" ]; then
-          echo "Renaming _dashboard to dashboard..."
           mv jmeter-report/_dashboard jmeter-report/dashboard
         fi
-
-        # 3. 【关键修复 B】修改 HTML 里的引用路径
-        # 把所有的 _dashboard/ 替换为 dashboard/
+        
+        # 修复路径
         find jmeter-report -type f -name "*.html" -exec sed -i 's|_dashboard/|dashboard/|g' {} +
-
-        # 4. 【关键修复 C】强制修复相对路径
-        # 确保所有资源引用都相对于当前目录，而不是根目录
-        # 这一步非常重要，防止浏览器去根目录找资源
         find jmeter-report -type f -name "*.html" -exec sed -i 's|src="/|src="./|g' {} +
         find jmeter-report -type f -name "*.html" -exec sed -i 's|href="/|href="./|g' {} +
         
-        # 5. 【关键修复 D】添加 .nojekyll
-        # 这个空文件告诉 GitHub Pages：不要忽略下划线文件夹，不要运行 Jekyll
         touch jmeter-report/.nojekyll
-        
-        # 6. 验证文件结构
-        echo "=== 最终的文件结构 ==="
-        ls -R jmeter-report
+        echo "=== JMeter Report Preparation Complete ==="
 
-    # 11. 检查文件结构
-    - name: Inspect JMeter Report Directory Structure
+    # 11. 调试步骤 (检查本地生成的文件)
+    - name: 📂 Inspect Local JMeter Report Structure
       run: |
-        echo "=================================================="
-        echo "INSPECTING: jmeter-report/"
-        echo "=================================================="
-        
-        # 检查目录是否存在
-        if [ ! -d "jmeter-report" ]; then
-          echo "ERROR: jmeter-report directory does not exist!"
-          exit 1
-        fi
-
-        echo -e "\n--- [1] Root level files in jmeter-report/ ---"
+        echo "=== Checking local jmeter-report/ ==="
         ls -lh jmeter-report/
-        
-        echo -e "\n--- [2] Full recursive tree (if tree is installed) ---"
-        # 尝试安装 tree，如果失败就用 ls 代替
-        sudo apt-get install -y tree || echo "Tree not installed, using ls instead"
-        tree jmeter-report || ls -lR jmeter-report
-        
-        echo -e "\n--- [3] Verifying critical files exist ---"
-        
-        # 检查 index.html
-        if [ -f "jmeter-report/index.html" ]; then
-          echo "index.html: FOUND"
-          # 打印前5行看看标题
-          head -5 jmeter-report/index.html
+        if [ -d "jmeter-report/content" ]; then
+          echo "✅ Local content/ directory exists."
         else
-          echo "index.html: MISSING"
+          echo "❌ Local content/ directory MISSING!"
           exit 1
         fi
-
-        # 检查 dashboard 文件夹
-        if [ -d "jmeter-report/dashboard" ]; then
-          echo "dashboard/: FOUND"
-          echo "   Contents:"
-          ls -lh jmeter-report/dashboard/ | head -10
+        # 简单检查 index.html 是否引用了 content
+        if grep -q "content/js/" jmeter-report/index.html; then
+          echo "✅ Local index.html references content/js/"
         else
-          echo "dashboard/: MISSING"
-          exit 1
+          echo "⚠️  Local index.html might use absolute paths (checking anyway)"
         fi
 
-        # 检查 _dashboard (确保已经被重命名了)
-        if [ -d "jmeter-report/_dashboard" ]; then
-          echo "_dashboard/: STILL EXISTS (Rename failed)"
-          exit 1
-        else
-          echo "_dashboard/: Gone (Correctly renamed)"
-        fi
-
-        # 检查是否有 .jtl 或临时文件残留
-        if ls jmeter-report/*.jtl 2>/dev/null; then
-            echo "WARNING: .jtl file found in report folder (should be cleaned)"
-        fi
-
-        echo -e "\n=================================================="
-        echo "INSPECTION COMPLETE: All files appear to be in place."
-        echo "If the site still shows 404 on GitHub Pages,"
-        echo "the problem is in the DEPLOYMENT step (gh-pages action)."
-        echo "=================================================="
-
-    # 12. 创建 .nojekyll (双重保险)
-    - name: Create .nojekyll for GitHub Pages
+    # ==========================================================
+    # 12. 整理部署包 (关键：隔离源码和产物)
+    # ==========================================================
+    - name: Organize Deployment Package (public/)
       run: |
-        touch allure-report/.nojekyll
-        touch jmeter-report/.nojekyll
-        touch .nojekyll
+        # 清理旧的 public 目录
+        rm -rf public
+        mkdir -p public
+        
+        # 1. 把 jmeter-report 整个复制进去
+        cp -r jmeter-report public/jmeter-report
+        
+        # 2. 把 allure-report 整个复制进去
+        cp -r allure-report public/allure-report
+        
+        # 3. 创建根目录重定向页 (指向 jmeter)
+        echo "<html><head><meta http-equiv='refresh' content='0; url=jmeter-report/index.html'></head><body>Redirecting to JMeter Report...</body></html>" > public/index.html
+        
+        # 4. 关键：在 public 根目录创建 .nojekyll
+        # 这告诉 GitHub Pages：不要运行 Jekyll，不要忽略下划线开头的文件夹
+        touch public/.nojekyll
+        
+        # 5. 确保 jmeter-report 内部也有 .nojekyll (防止 content 被当作特殊目录)
+        touch public/jmeter-report/.nojekyll
+        
+        echo "=== Contents of public/ directory (what will be deployed) ==="
+        ls -lh public/
+        echo "=== Contents of public/jmeter-report/ ==="
+        ls -lh public/jmeter-report/
+        echo "=== Verifying .nojekyll exists ==="
+        ls -lh public/.nojekyll
 
+    # ==========================================================
     # 13. 部署到 GitHub Pages
+    # ==========================================================
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./
-        destination_dir: .
-        keep_files: true
+        publish_dir: ./public      # 只发布 public 目录
+        destination_dir: .         # 发布到 gh-pages 根目录
+        keep_files: false          # 每次覆盖，防止旧文件残留
+
+    # ==========================================================
+    # 14. 【新增】审计步骤：检查 GitHub 上实际存储的文件
+    # ==========================================================
+    - name: 🔍 Audit - Check Files on GitHub gh-pages Branch
+      run: |
+        echo "=================================================="
+        echo "🔍 AUDITING: What was actually pushed to GitHub?"
+        echo "=================================================="
+        
+        # 配置 Git
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        
+        # 克隆刚推送的 gh-pages 分支到临时目录
+        # 注意：需要 token 权限，使用 github.token
+        echo "Cloning gh-pages branch to /tmp/gh-pages-check..."
+        git clone --branch gh-pages --depth 1 https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git /tmp/gh-pages-check
+        
+        cd /tmp/gh-pages-check
+        
+        echo -e "\n--- [1] 📂 Full file tree on GitHub ---"
+        ls -lh
+        echo ""
+        tree . || find . -type f
+        
+        echo -e "\n--- [2] 🔍 Checking for jmeter-report/content/ ---"
+        if [ -d "jmeter-report/content" ]; then
+          echo "✅ SUCCESS: jmeter-report/content/ exists on GitHub!"
+          echo "   Files inside content/js:"
+          ls -lh jmeter-report/content/js/ | head -10
+        else
+          echo "❌ FAILURE: jmeter-report/content/ is MISSING on GitHub!"
+          echo "   This means the push failed or .gitignore filtered it out."
+          exit 1
+        fi
+        
+        echo -e "\n--- [3] 🔍 Checking for index.html ---"
+        if [ -f "index.html" ]; then
+          echo "✅ index.html exists on GitHub."
+          cat index.html
+        else
+          echo "❌ index.html is MISSING on GitHub!"
+          exit 1
+        fi
+        
+        echo -e "\n--- [4] 🔍 Checking for .nojekyll ---"
+        if [ -f ".nojekyll" ]; then
+          echo "✅ .nojekyll exists on GitHub (Good, Jekyll will be skipped)."
+        else
+          echo "⚠️  WARNING: .nojekyll is MISSING on GitHub root."
+          echo "   GitHub Pages might run Jekyll and filter out files."
+        fi
+        
+        echo -e "\n=================================================="
+        echo "✅ AUDIT COMPLETE: Files look good on GitHub side."
+        echo "If the browser still shows 404, the issue might be"
+        echo "browser cache or a subtle path issue in index.html."
+        echo "Try opening: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/jmeter-report/index.html"
+        echo "=================================================="
