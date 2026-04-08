@@ -220,11 +220,67 @@ jobs:
         echo "=== 最终的文件结构 ==="
         ls -R jmeter-report
 
-    # 11. 【修正】创建根目录跳转页 (这里改成了跳转到 JMeter 报告)
-    - name: Create Root Redirect to JMeter
+    # 11. 检查文件结构
+    - name: Inspect JMeter Report Directory Structure
       run: |
-        # 修改这里：指向 jmeter-report
-        echo "<html><head><meta http-equiv='refresh' content='0; url=jmeter-report/index.html'></head><body>Redirecting...</body></html>" > index.html
+        echo "=================================================="
+        echo "INSPECTING: jmeter-report/"
+        echo "=================================================="
+        
+        # 检查目录是否存在
+        if [ ! -d "jmeter-report" ]; then
+          echo "ERROR: jmeter-report directory does not exist!"
+          exit 1
+        fi
+
+        echo -e "\n--- [1] Root level files in jmeter-report/ ---"
+        ls -lh jmeter-report/
+        
+        echo -e "\n--- [2] Full recursive tree (if tree is installed) ---"
+        # 尝试安装 tree，如果失败就用 ls 代替
+        sudo apt-get install -y tree || echo "Tree not installed, using ls instead"
+        tree jmeter-report || ls -lR jmeter-report
+        
+        echo -e "\n--- [3] Verifying critical files exist ---"
+        
+        # 检查 index.html
+        if [ -f "jmeter-report/index.html" ]; then
+          echo "index.html: FOUND"
+          # 打印前5行看看标题
+          head -5 jmeter-report/index.html
+        else
+          echo "index.html: MISSING"
+          exit 1
+        fi
+
+        # 检查 dashboard 文件夹
+        if [ -d "jmeter-report/dashboard" ]; then
+          echo "dashboard/: FOUND"
+          echo "   Contents:"
+          ls -lh jmeter-report/dashboard/ | head -10
+        else
+          echo "dashboard/: MISSING"
+          exit 1
+        fi
+
+        # 检查 _dashboard (确保已经被重命名了)
+        if [ -d "jmeter-report/_dashboard" ]; then
+          echo "_dashboard/: STILL EXISTS (Rename failed)"
+          exit 1
+        else
+          echo "_dashboard/: Gone (Correctly renamed)"
+        fi
+
+        # 检查是否有 .jtl 或临时文件残留
+        if ls jmeter-report/*.jtl 2>/dev/null; then
+            echo "WARNING: .jtl file found in report folder (should be cleaned)"
+        fi
+
+        echo -e "\n=================================================="
+        echo "INSPECTION COMPLETE: All files appear to be in place."
+        echo "If the site still shows 404 on GitHub Pages,"
+        echo "the problem is in the DEPLOYMENT step (gh-pages action)."
+        echo "=================================================="
 
     # 12. 创建 .nojekyll (双重保险)
     - name: Create .nojekyll for GitHub Pages
